@@ -3,282 +3,208 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Search AI - Fast. Clean. No spam.</title>
-<link rel="preconnect" href="https://www.google.com">
-<link rel="dns-prefetch" href="https://www.google.com">
+<title>Search AI</title>
 <style>
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    background: #f8f9fa;
+    font-family: arial, sans-serif;
+    background: #fff;
     margin: 0;
     padding: 0;
 }
 
 .container {
-    max-width: 650px;
-    width: 90%;
-    margin: 40px auto;
+    max-width: 652px;
+    margin: 20px auto;
+    padding: 0 16px;
 }
 
 .header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .logo {
-    font-size: 32px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.tagline {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 20px;
+    font-size: 28px;
+    color: #202124;
+    margin-bottom: 8px;
 }
 
 .search-box {
     width: 100%;
-    padding: 12px 16px;
+    padding: 11px 16px;
     font-size: 16px;
-    margin-bottom: 30px;
-    border: 1px solid #ddd;
+    border: 1px solid #dfe1e5;
     border-radius: 24px;
-    box-shadow: 0 1px 6px rgba(32,33,36,.28);
     outline: none;
     box-sizing: border-box;
 }
 
+.search-box:hover {
+    border-color: #ccc;
+    box-shadow: 0 1px 6px rgba(32,33,36,.28);
+}
+
 .search-box:focus {
-    box-shadow: 0 1px 6px rgba(32,33,36,.50);
+    border-color: transparent;
+    box-shadow: 0 1px 6px rgba(32,33,36,.28);
 }
 
-/* Shortcuts Grid */
+/* Shortcuts */
 .shortcuts-section {
-    margin: 40px 0;
-}
-
-.shortcuts-section h3 {
-    font-size: 14px;
-    font-weight: 600;
-    color: #666;
-    margin-bottom: 16px;
-    text-align: center;
+    margin: 30px 0;
 }
 
 .shortcuts-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 8px;
 }
 
 .shortcut {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 12px 8px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    padding: 8px;
     text-decoration: none;
-    color: #333;
+    color: #202124;
     cursor: pointer;
-    transition: all 0.2s ease;
-    min-height: 80px;
 }
 
 .shortcut:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    opacity: 0.8;
+}
+
+.shortcut-icon {
+    width: 56px;
+    height: 56px;
+    background: #f1f3f4;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
 }
 
 .shortcut img {
-    width: 16px;
-    height: 16px;
-    margin-bottom: 6px;
-    border-radius: 4px;
+    width: 32px;
+    height: 32px;
 }
 
 .shortcut span {
-    font-size: 11px;
+    font-size: 13px;
     text-align: center;
-    line-height: 1.2;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .shortcut[data-priority="2"] {
     display: none;
 }
 
-/* Results */
+/* Results - Google style */
 .results-container {
-    margin-top: 30px;
-}
-
-.loading {
-    text-align: center;
-    color: #666;
-    padding: 20px;
+    margin-top: 20px;
 }
 
 .result {
-    background: white;
-    padding: 16px;
-    margin-bottom: 16px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    margin-bottom: 28px;
 }
 
-.result:last-child {
-    margin-bottom: 0;
-}
-
-.meta {
+.result-url {
     display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 4px;
+    align-items: center;
+    margin-bottom: 3px;
 }
 
-.meta img {
-    width: 32px;
-    height: 32px;
-    margin-top: 3px;
-    border-radius: 4px;
+.result-url img {
+    width: 18px;
+    height: 18px;
+    margin-right: 12px;
 }
 
-.meta-text {
-    line-height: 1.3;
-}
-
-.name {
+.result-url-text {
     font-size: 14px;
-    font-weight: 600;
-    color: #333;
+    line-height: 20px;
+    color: #202124;
 }
 
-.source {
-    font-size: 12px;
-    color: #70757a;
+.result-title {
+    margin: 0 0 3px 0;
+    font-size: 20px;
+    line-height: 26px;
 }
 
-.title {
-    font-size: 18px;
-    margin: 4px 0;
-}
-
-.title a {
+.result-title a {
     color: #1a0dab;
     text-decoration: none;
 }
 
-.title a:hover {
-    text-decoration: underline;
-}
-
-.title a:visited {
+.result-title a:visited {
     color: #681da8;
 }
 
-.summary {
+.result-title a:hover {
+    text-decoration: underline;
+}
+
+.result-snippet {
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 22px;
     color: #4d5156;
-    max-height: 3em;
+    max-height: 44px;
     overflow: hidden;
 }
 
-.summary.expanded {
+.result-snippet.expanded {
     max-height: none;
 }
 
 .read-more {
-    font-size: 13px;
-    cursor: pointer;
+    font-size: 14px;
     color: #1a0dab;
-    text-decoration: none;
-    display: inline-block;
+    cursor: pointer;
     margin-top: 4px;
+    display: inline-block;
 }
 
 .read-more:hover {
     text-decoration: underline;
 }
 
-.error {
-    background: #fee;
-    padding: 16px;
-    border-radius: 8px;
-    color: #c00;
-    margin: 20px 0;
+.loading {
+    color: #70757a;
+    padding: 20px 0;
 }
 
-/* Tablet (768px+) */
+.error {
+    color: #d93025;
+    padding: 20px 0;
+}
+
+/* Tablet */
 @media (min-width: 768px) {
     .shortcuts-grid {
-        gap: 16px;
+        gap: 8px;
     }
     
-    .shortcut {
-        padding: 16px 12px;
-        min-height: 96px;
+    .shortcut-icon {
+        width: 64px;
+        height: 64px;
     }
     
     .shortcut img {
         width: 32px;
         height: 32px;
     }
+}
 
-/* Desktop (1200px+) */
+/* Desktop */
 @media (min-width: 1200px) {
-    .container {
-        max-width: 1000px;
-    }
-    
     .shortcuts-grid {
         grid-template-columns: repeat(6, 1fr);
-        gap: 20px;
-    }
-    
-    .shortcut {
-        padding: 16px 12px;
-        min-height: 100px;
-    }
-    
-    .shortcut img {
-        width: 32px;
-        height: 32px;
-        margin-bottom: 8px;
-    }
-    
-    .shortcut span {
-        font-size: 13px;
+        gap: 8px;
     }
     
     .shortcut[data-priority="2"] {
         display: flex;
-    }
-}
-
-/* Mobile adjustments */
-@media (max-width: 767px) {
-    .container {
-        width: 95%;
-        margin: 20px auto;
-    }
-    
-    .logo {
-        font-size: 24px;
-    }
-    
-    .shortcuts-section {
-        margin: 30px 0;
     }
 }
 </style>
@@ -287,21 +213,15 @@ body {
 
 <div class="container">
     <div class="header">
-        <div class="logo">🔍 Search AI</div>
-        <div class="tagline">Fast. Clean. No spam.</div>
+        <div class="logo">Search AI</div>
     </div>
     
     <input id="searchInput" class="search-box" type="text" placeholder="Search anything..." autofocus />
     
-    <!-- Shortcuts Grid -->
     <div class="shortcuts-section" id="shortcutsSection">
-        <h3>Quick Access</h3>
-        <div class="shortcuts-grid" id="shortcutsGrid">
-            <!-- Populated by JavaScript -->
-        </div>
+        <div class="shortcuts-grid" id="shortcutsGrid"></div>
     </div>
     
-    <!-- Search Results -->
     <div id="results" class="results-container"></div>
 </div>
 
@@ -311,28 +231,22 @@ const resultsDiv = document.getElementById("results");
 const shortcutsSection = document.getElementById("shortcutsSection");
 const shortcutsGrid = document.getElementById("shortcutsGrid");
 
-// Load shortcuts and navigation router
 let shortcuts = [];
 let navigationRouter = {};
 
-// Fetch shortcuts data
 fetch('/shortcuts.json')
     .then(res => res.json())
     .then(data => {
         shortcuts = data;
         renderShortcuts();
-    })
-    .catch(err => console.error('Failed to load shortcuts:', err));
+    });
 
-// Fetch navigation router
 fetch('/navigation-router.json')
     .then(res => res.json())
     .then(data => {
         navigationRouter = data;
-    })
-    .catch(err => console.error('Failed to load navigation router:', err));
+    });
 
-// Render shortcuts grid
 function renderShortcuts() {
     shortcutsGrid.innerHTML = '';
     
@@ -345,78 +259,62 @@ function renderShortcuts() {
         if (shortcut.isWidget) {
             link.onclick = (e) => {
                 e.preventDefault();
-                showWeatherWidget();
+                alert('Weather widget coming soon!');
             };
         }
         
+        const iconWrapper = document.createElement('div');
+        iconWrapper.className = 'shortcut-icon';
+        
         const icon = document.createElement('img');
-        icon.src = `https://www.google.com/s2/favicons?domain=${shortcut.domain}&sz=64`;
+        icon.src = `https://www.google.com/s2/favicons?domain=${shortcut.domain}&sz=32`;
         icon.alt = shortcut.name;
-        icon.onerror = function() {
-            this.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text y="20" font-size="20">🔗</text></svg>';
-        };
         
         const name = document.createElement('span');
         name.textContent = shortcut.name;
         
-        link.appendChild(icon);
+        iconWrapper.appendChild(icon);
+        link.appendChild(iconWrapper);
         link.appendChild(name);
         shortcutsGrid.appendChild(link);
     });
 }
 
-// Navigation router check
 function checkNavigation(query) {
     const cleaned = query.toLowerCase().trim();
     return navigationRouter[cleaned];
 }
 
-// Handle Enter key
 input.addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
         handleSearch();
     }
 });
 
-// Hide shortcuts when searching
-function hideShortcuts() {
-    shortcutsSection.style.display = 'none';
-}
-
-// Show shortcuts
-function showShortcuts() {
-    shortcutsSection.style.display = 'block';
-}
-
 function handleSearch() {
     const q = input.value.trim();
     if (!q) return;
     
-    // Check if it's a navigation query
     const navUrl = checkNavigation(q);
     if (navUrl) {
         window.location.href = navUrl;
         return;
     }
     
-    // Otherwise, perform search
     search(q);
 }
 
 function search(query) {
-    hideShortcuts();
+    shortcutsSection.style.display = 'none';
     resultsDiv.innerHTML = '<div class="loading">Searching...</div>';
 
     fetch(`/api/search?q=${encodeURIComponent(query)}`)
-        .then(res => {
-            if (!res.ok) throw new Error("Search failed");
-            return res.json();
-        })
+        .then(res => res.json())
         .then(data => {
             resultsDiv.innerHTML = "";
             
             if (data.length === 0) {
-                resultsDiv.innerHTML = '<div class="loading">No results found. Try a different query.</div>';
+                resultsDiv.innerHTML = '<div class="loading">No results found</div>';
                 return;
             }
 
@@ -427,35 +325,29 @@ function search(query) {
                 const summaryId = "summary-" + Math.random().toString(36).substr(2, 9);
 
                 div.innerHTML = `
-                    <div class="meta">
-                        ${item.favicon ? `<img src="${item.favicon}" alt="" onerror="this.style.display='none'">` : ""}
-                        <div class="meta-text">
-                            <div class="name">${escapeHtml(item.name)}</div>
-                            <div class="source">${escapeHtml(item.source)}</div>
-                        </div>
+                    <div class="result-url">
+                        ${item.favicon ? `<img src="${item.favicon}" alt="">` : ""}
+                        <div class="result-url-text">${escapeHtml(item.source)}</div>
                     </div>
-
-                    <div class="title">
-                        <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener">${escapeHtml(item.title)}</a>
-                    </div>
-
-                    <div id="${summaryId}" class="summary">${escapeHtml(item.summary)}</div>
-                    <a class="read-more" onclick="toggleSummary('${summaryId}', this); return false;">Read more</a>
+                    <h3 class="result-title">
+                        <a href="${escapeHtml(item.url)}" target="_blank">${escapeHtml(item.title)}</a>
+                    </h3>
+                    <div id="${summaryId}" class="result-snippet">${escapeHtml(item.summary)}</div>
+                    <a class="read-more" onclick="toggleSummary('${summaryId}', this)">More</a>
                 `;
 
                 resultsDiv.appendChild(div);
             });
         })
         .catch(err => {
-            resultsDiv.innerHTML = `<div class="error">Error: ${err.message}. Please try again.</div>`;
-            console.error("Search error:", err);
+            resultsDiv.innerHTML = `<div class="error">Search failed. Please try again.</div>`;
         });
 }
 
 function toggleSummary(id, el) {
     const s = document.getElementById(id);
     s.classList.toggle("expanded");
-    el.textContent = s.classList.contains("expanded") ? "Show less" : "Read more";
+    el.textContent = s.classList.contains("expanded") ? "Less" : "More";
 }
 
 function escapeHtml(text) {
@@ -464,26 +356,12 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-function showWeatherWidget() {
-    alert('Weather widget coming soon! Will show current weather and forecast.');
-    // TODO: Implement weather widget with OpenWeatherMap API
-}
-
-// Clear search and show shortcuts when input is cleared
 input.addEventListener('input', function() {
-    if (this.value.trim() === '' && resultsDiv.innerHTML !== '') {
+    if (this.value.trim() === '') {
         resultsDiv.innerHTML = '';
-        showShortcuts();
+        shortcutsSection.style.display = 'block';
     }
 });
-
-// Optional: Search on page load if there's a query parameter
-const urlParams = new URLSearchParams(window.location.search);
-const queryParam = urlParams.get('q');
-if (queryParam) {
-    input.value = queryParam;
-    handleSearch();
-}
 </script>
 
 </body>
