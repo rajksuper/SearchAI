@@ -1,17 +1,43 @@
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-from tavily import TavilyClient
 import json
 import os
+from urllib import request as url_request
 
-# Initialize Tavily client
-tavily = TavilyClient(api_key=os.environ.get("TAVILY_API_KEY"))
+# Get API key from environment
+TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY")
 
 def derive_name(url):
     """Derive Name from domain (example.com -> Example)"""
     domain = urlparse(url).netloc.replace("www.", "")
     name = domain.split(".")[0].replace("-", " ").title()
     return name
+
+def tavily_search(query):
+    """Call Tavily API directly using HTTP requests"""
+    url = "https://api.tavily.com/search"
+    
+    payload = {
+        "api_key": TAVILY_API_KEY,
+        "query": query,
+        "max_results": 20,
+        "include_favicon": True
+    }
+    
+    # Make HTTP POST request
+    req = url_request.Request(
+        url,
+        data=json.dumps(payload).encode('utf-8'),
+        headers={'Content-Type': 'application/json'}
+    )
+    
+    try:
+        with url_request.urlopen(req) as response:
+            data = json.loads(response.read().decode('utf-8'))
+            return data
+    except Exception as e:
+        print(f"Tavily API error: {e}")
+        return {"results": []}
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -29,12 +55,8 @@ class handler(BaseHTTPRequestHandler):
             return
         
         try:
-            # Search with Tavily
-            response = tavily.search(
-                query=query,
-                max_results=20,
-                include_favicon=True
-            )
+            # Search with Tavily using REST API
+            response = tavily_search(query)
             
             # Format results
             results = []
@@ -59,5 +81,6 @@ class handler(BaseHTTPRequestHandler):
         except Exception as e:
             self.send_response(500)
             self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write(json.dumps({"error": str(e)}).encode())
