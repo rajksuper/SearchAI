@@ -37,6 +37,29 @@ body {
     border-radius: 24px;
     outline: none;
     box-sizing: border-box;
+    position: relative;
+    background: transparent;
+    z-index: 2;
+}
+
+.search-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-suggestion {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 11px 16px;
+    font-size: 16px;
+    border: 1px solid transparent;
+    border-radius: 24px;
+    color: #80868b;
+    pointer-events: none;
+    box-sizing: border-box;
+    z-index: 1;
 }
 
 .search-box:hover {
@@ -196,16 +219,15 @@ body {
     }
 }
 
-/* Desktop (1200px+) */
+/* Desktop */
 @media (min-width: 1200px) {
     .shortcuts-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         gap: 8px;
     }
     
-    /* Keep priority 2 hidden on desktop too */
     .shortcut[data-priority="2"] {
-        display: none;
+        display: flex;
     }
 }
 </style>
@@ -217,7 +239,10 @@ body {
         <div class="logo">Search AI</div>
     </div>
     
-    <input id="searchInput" class="search-box" type="text" placeholder="Search anything..." autofocus />
+    <div class="search-wrapper">
+        <input id="searchSuggestion" class="search-suggestion" type="text" disabled />
+        <input id="searchInput" class="search-box" type="text" placeholder="Search anything..." autocomplete="off" autofocus />
+    </div>
     
     <div class="shortcuts-section" id="shortcutsSection">
         <div class="shortcuts-grid" id="shortcutsGrid"></div>
@@ -228,12 +253,14 @@ body {
 
 <script>
 const input = document.getElementById("searchInput");
+const suggestionInput = document.getElementById("searchSuggestion");
 const resultsDiv = document.getElementById("results");
 const shortcutsSection = document.getElementById("shortcutsSection");
 const shortcutsGrid = document.getElementById("shortcutsGrid");
 
 let shortcuts = [];
 let navigationRouter = {};
+let currentSuggestion = '';
 
 fetch('/shortcuts.json')
     .then(res => res.json())
@@ -281,20 +308,91 @@ function renderShortcuts() {
     });
 }
 
+// Find best matching suggestion
+function findSuggestion(query) {
+    if (!query || query.length < 2) return '';
+    
+    const cleaned = query.toLowerCase().trim();
+    
+    // Find exact match or starts-with match
+    for (let key in navigationRouter) {
+        if (key.startsWith(cleaned) && key !== cleaned) {
+            return key;
+        }
+    }
+    
+    return '';
+}
+
+// Update suggestion display
+function updateSuggestion() {
+    const query = input.value;
+    const suggestion = findSuggestion(query);
+    
+    if (suggestion && query.length >= 2) {
+        currentSuggestion = suggestion;
+        // Show query in normal text + rest in gray
+        suggestionInput.value = query + suggestion.slice(query.length);
+    } else {
+        currentSuggestion = '';
+        suggestionInput.value = '';
+    }
+}
+
+// Complete the suggestion
+function completeSuggestion() {
+    if (currentSuggestion) {
+        input.value = currentSuggestion;
+        suggestionInput.value = '';
+        currentSuggestion = '';
+        input.focus();
+    }
+}
+
+// Check navigation
 function checkNavigation(query) {
     const cleaned = query.toLowerCase().trim();
     return navigationRouter[cleaned];
 }
 
+// Input event - update suggestion as user types
+input.addEventListener("input", function() {
+    updateSuggestion();
+    
+    if (this.value.trim() === '') {
+        resultsDiv.innerHTML = '';
+        shortcutsSection.style.display = 'block';
+    }
+});
+
+// Keydown event - handle Enter and Arrow keys
 input.addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
+        e.preventDefault();
         handleSearch();
+    } else if (e.key === "ArrowRight") {
+        // Complete suggestion with right arrow
+        if (currentSuggestion && input.selectionStart === input.value.length) {
+            e.preventDefault();
+            completeSuggestion();
+        }
+    }
+});
+
+// Click/Tap on input - complete suggestion if exists
+input.addEventListener("click", function() {
+    if (currentSuggestion) {
+        completeSuggestion();
     }
 });
 
 function handleSearch() {
     const q = input.value.trim();
     if (!q) return;
+    
+    // Clear suggestion
+    suggestionInput.value = '';
+    currentSuggestion = '';
     
     const navUrl = checkNavigation(q);
     if (navUrl) {
@@ -356,13 +454,6 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
-
-input.addEventListener('input', function() {
-    if (this.value.trim() === '') {
-        resultsDiv.innerHTML = '';
-        shortcutsSection.style.display = 'block';
-    }
-});
 </script>
 
 </body>
