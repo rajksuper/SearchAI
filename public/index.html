@@ -219,15 +219,16 @@ body {
     }
 }
 
-/* Desktop */
+/* Desktop (1200px+) */
 @media (min-width: 1200px) {
     .shortcuts-grid {
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 8px;
     }
     
+    /* Keep priority 2 hidden on desktop too */
     .shortcut[data-priority="2"] {
-        display: flex;
+        display: none;
     }
 }
 </style>
