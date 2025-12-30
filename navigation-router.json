@@ -1,0 +1,210 @@
+{
+  "youtube": "https://youtube.com",
+  "you": "https://youtube.com",
+  "yt": "https://youtube.com",
+  "youtubetv": "https://tv.youtube.com",
+  "youtubemusic": "https://music.youtube.com",
+  
+  "gmail": "https://mail.google.com",
+  "mail": "https://mail.google.com",
+  "email": "https://mail.google.com",
+  
+  "amazon": "https://amazon.com",
+  "amz": "https://amazon.com",
+  "prime": "https://amazon.com/prime",
+  "primevideo": "https://primevideo.com",
+  
+  "facebook": "https://facebook.com",
+  "fb": "https://facebook.com",
+  "messenger": "https://messenger.com",
+  
+  "reddit": "https://reddit.com",
+  
+  "claude": "https://claude.ai",
+  
+  "twitter": "https://x.com",
+  "x": "https://x.com",
+  
+  "maps": "https://maps.google.com",
+  "googlemaps": "https://maps.google.com",
+  
+  "linkedin": "https://linkedin.com",
+  
+  "chatgpt": "https://chat.openai.com",
+  "gpt": "https://chat.openai.com",
+  "openai": "https://chat.openai.com",
+  
+  "grok": "https://x.ai",
+  
+  "gemini": "https://gemini.google.com",
+  
+  "wikipedia": "https://wikipedia.org",
+  "wiki": "https://wikipedia.org",
+  
+  "walmart": "https://walmart.com",
+  
+  "target": "https://target.com",
+  
+  "instagram": "https://instagram.com",
+  "insta": "https://instagram.com",
+  "ig": "https://instagram.com",
+  
+  "netflix": "https://netflix.com",
+  
+  "costco": "https://costco.com",
+  
+  "ebay": "https://ebay.com",
+  
+  "homedepot": "https://homedepot.com",
+  "home depot": "https://homedepot.com",
+  
+  "lowes": "https://lowes.com",
+  "lowe's": "https://lowes.com",
+  
+  "bestbuy": "https://bestbuy.com",
+  "best buy": "https://bestbuy.com",
+  
+  "newegg": "https://newegg.com",
+  
+  "craigslist": "https://craigslist.org",
+  
+  "usps": "https://usps.com",
+  
+  "ups": "https://ups.com",
+  
+  "fedex": "https://fedex.com",
+  
+  "indeed": "https://indeed.com",
+  
+  "spotify": "https://spotify.com",
+  
+  "expedia": "https://expedia.com",
+  
+  "booking": "https://booking.com",
+  "bookingcom": "https://booking.com",
+  
+  "chase": "https://chase.com",
+  "chasebank": "https://chase.com",
+  
+  "wellsfargo": "https://wellsfargo.com",
+  "wells fargo": "https://wellsfargo.com",
+  "wf": "https://wellsfargo.com",
+  
+  "capitalone": "https://capitalone.com",
+  "capital one": "https://capitalone.com",
+  
+  "bankofamerica": "https://bankofamerica.com",
+  "bank of america": "https://bankofamerica.com",
+  "boa": "https://bankofamerica.com",
+  
+  "google": "https://google.com",
+  "drive": "https://drive.google.com",
+  "googledrive": "https://drive.google.com",
+  "docs": "https://docs.google.com",
+  "googledocs": "https://docs.google.com",
+  "sheets": "https://sheets.google.com",
+  "googlesheets": "https://sheets.google.com",
+  "calendar": "https://calendar.google.com",
+  "googlecalendar": "https://calendar.google.com",
+  "photos": "https://photos.google.com",
+  "googlephotos": "https://photos.google.com",
+  "meet": "https://meet.google.com",
+  "googlemeet": "https://meet.google.com",
+  "translate": "https://translate.google.com",
+  "googletranslate": "https://translate.google.com",
+  "news": "https://news.google.com",
+  "googlenews": "https://news.google.com",
+  
+  "tiktok": "https://tiktok.com",
+  "pinterest": "https://pinterest.com",
+  "snapchat": "https://snapchat.com",
+  "whatsapp": "https://whatsapp.com",
+  "discord": "https://discord.com",
+  "telegram": "https://telegram.org",
+  "tumblr": "https://tumblr.com",
+  "medium": "https://medium.com",
+  "quora": "https://quora.com",
+  
+  "hulu": "https://hulu.com",
+  "disney": "https://disneyplus.com",
+  "disneyplus": "https://disneyplus.com",
+  "disney+": "https://disneyplus.com",
+  "hbomax": "https://max.com",
+  "max": "https://max.com",
+  "applemusic": "https://music.apple.com",
+  "pandora": "https://pandora.com",
+  "soundcloud": "https://soundcloud.com",
+  "twitch": "https://twitch.tv",
+  
+  "steam": "https://steampowered.com",
+  "epicgames": "https://epicgames.com",
+  "epic": "https://epicgames.com",
+  "roblox": "https://roblox.com",
+  "minecraft": "https://minecraft.net",
+  "fortnite": "https://fortnite.com",
+  
+  "etsy": "https://etsy.com",
+  "wayfair": "https://wayfair.com",
+  "ikea": "https://ikea.com",
+  "chewy": "https://chewy.com",
+  
+  "zoom": "https://zoom.us",
+  "slack": "https://slack.com",
+  "teams": "https://teams.microsoft.com",
+  "microsoftteams": "https://teams.microsoft.com",
+  "dropbox": "https://dropbox.com",
+  "notion": "https://notion.so",
+  "trello": "https://trello.com",
+  "asana": "https://asana.com",
+  
+  "github": "https://github.com",
+  "stackoverflow": "https://stackoverflow.com",
+  "stack overflow": "https://stackoverflow.com",
+  
+  "airbnb": "https://airbnb.com",
+  "hotels": "https://hotels.com",
+  "hotelscom": "https://hotels.com",
+  "kayak": "https://kayak.com",
+  "tripadvisor": "https://tripadvisor.com",
+  "southwest": "https://southwest.com",
+  "delta": "https://delta.com",
+  "united": "https://united.com",
+  "american": "https://aa.com",
+  "priceline": "https://priceline.com",
+  
+  "imdb": "https://imdb.com",
+  "yelp": "https://yelp.com",
+  "zillow": "https://zillow.com",
+  "realtor": "https://realtor.com",
+  "redfin": "https://redfin.com",
+  
+  "dhl": "https://dhl.com",
+  
+  "venmo": "https://venmo.com",
+  "cashapp": "https://cash.app",
+  "paypal": "https://paypal.com",
+  "coinbase": "https://coinbase.com",
+  "robinhood": "https://robinhood.com",
+  "schwab": "https://schwab.com",
+  "fidelity": "https://fidelity.com",
+  "etrade": "https://etrade.com",
+  
+  "cnn": "https://cnn.com",
+  "bbc": "https://bbc.com",
+  "nytimes": "https://nytimes.com",
+  "nyt": "https://nytimes.com",
+  "wsj": "https://wsj.com",
+  "washingtonpost": "https://washingtonpost.com",
+  "wapo": "https://washingtonpost.com",
+  "foxnews": "https://foxnews.com",
+  "msnbc": "https://msnbc.com",
+  
+  "weather": "https://weather.com",
+  "weathercom": "https://weather.com",
+  
+  "yahoomail": "https://mail.yahoo.com",
+  "yahoo": "https://yahoo.com",
+  "bing": "https://bing.com",
+  "duckduckgo": "https://duckduckgo.com",
+  "ddg": "https://duckduckgo.com"
+}

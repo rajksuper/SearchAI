@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Search Engine</title>
+<title>Search AI - Fast. Clean. No spam.</title>
+<link rel="preconnect" href="https://www.google.com">
+<link rel="dns-prefetch" href="https://www.google.com">
 <style>
 body {
-    font-family: Arial, sans-serif;
-    background: white;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #f8f9fa;
     margin: 0;
     padding: 0;
 }
@@ -36,11 +38,11 @@ body {
     margin-bottom: 20px;
 }
 
-input {
+.search-box {
     width: 100%;
     padding: 12px 16px;
     font-size: 16px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     border: 1px solid #ddd;
     border-radius: 24px;
     box-shadow: 0 1px 6px rgba(32,33,36,.28);
@@ -48,8 +50,75 @@ input {
     box-sizing: border-box;
 }
 
-input:focus {
+.search-box:focus {
     box-shadow: 0 1px 6px rgba(32,33,36,.50);
+}
+
+/* Shortcuts Grid */
+.shortcuts-section {
+    margin: 40px 0;
+}
+
+.shortcuts-section h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.shortcuts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.shortcut {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 8px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    text-decoration: none;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 80px;
+}
+
+.shortcut:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.shortcut img {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+}
+
+.shortcut span {
+    font-size: 11px;
+    text-align: center;
+    line-height: 1.2;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.shortcut[data-priority="2"] {
+    display: none;
+}
+
+/* Results */
+.results-container {
+    margin-top: 30px;
 }
 
 .loading {
@@ -59,13 +128,15 @@ input:focus {
 }
 
 .result {
-    margin-bottom: 26px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #f0f0f0;
+    background: white;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
 .result:last-child {
-    border-bottom: none;
+    margin-bottom: 0;
 }
 
 .meta {
@@ -119,7 +190,7 @@ input:focus {
     font-size: 14px;
     line-height: 1.5;
     color: #4d5156;
-    max-height: 3em; /* ~2 lines */
+    max-height: 3em;
     overflow: hidden;
 }
 
@@ -148,7 +219,60 @@ input:focus {
     margin: 20px 0;
 }
 
-@media (max-width: 768px) {
+/* Tablet (768px+) */
+@media (min-width: 768px) {
+    .shortcuts-grid {
+        gap: 16px;
+    }
+    
+    .shortcut {
+        padding: 16px 12px;
+        min-height: 96px;
+    }
+    
+    .shortcut img {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .shortcut span {
+        font-size: 12px;
+    }
+}
+
+/* Desktop (1200px+) */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1000px;
+    }
+    
+    .shortcuts-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 20px;
+    }
+    
+    .shortcut {
+        padding: 16px 12px;
+        min-height: 100px;
+    }
+    
+    .shortcut img {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 8px;
+    }
+    
+    .shortcut span {
+        font-size: 13px;
+    }
+    
+    .shortcut[data-priority="2"] {
+        display: flex;
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
     .container {
         width: 95%;
         margin: 20px auto;
@@ -157,6 +281,10 @@ input:focus {
     .logo {
         font-size: 24px;
     }
+    
+    .shortcuts-section {
+        margin: 30px 0;
+    }
 }
 </style>
 </head>
@@ -164,33 +292,127 @@ input:focus {
 
 <div class="container">
     <div class="header">
-        <div class="logo">🔍 Search AI - Fast. Clean. No spam.</div>
-        <div class="tagline"></div>
+        <div class="logo">🔍 Search AI</div>
+        <div class="tagline">Fast. Clean. No spam.</div>
     </div>
     
-    <input id="searchInput" type="text" placeholder="Search or type 'youtube' to go there..." autofocus />
-    <div id="results"></div>
+    <input id="searchInput" class="search-box" type="text" placeholder="Search anything..." autofocus />
+    
+    <!-- Shortcuts Grid -->
+    <div class="shortcuts-section" id="shortcutsSection">
+        <h3>Quick Access</h3>
+        <div class="shortcuts-grid" id="shortcutsGrid">
+            <!-- Populated by JavaScript -->
+        </div>
+    </div>
+    
+    <!-- Search Results -->
+    <div id="results" class="results-container"></div>
 </div>
 
 <script>
 const input = document.getElementById("searchInput");
 const resultsDiv = document.getElementById("results");
+const shortcutsSection = document.getElementById("shortcutsSection");
+const shortcutsGrid = document.getElementById("shortcutsGrid");
+
+// Load shortcuts and navigation router
+let shortcuts = [];
+let navigationRouter = {};
+
+// Fetch shortcuts data
+fetch('/shortcuts.json')
+    .then(res => res.json())
+    .then(data => {
+        shortcuts = data;
+        renderShortcuts();
+    })
+    .catch(err => console.error('Failed to load shortcuts:', err));
+
+// Fetch navigation router
+fetch('/navigation-router.json')
+    .then(res => res.json())
+    .then(data => {
+        navigationRouter = data;
+    })
+    .catch(err => console.error('Failed to load navigation router:', err));
+
+// Render shortcuts grid
+function renderShortcuts() {
+    shortcutsGrid.innerHTML = '';
+    
+    shortcuts.forEach(shortcut => {
+        const link = document.createElement('a');
+        link.className = 'shortcut';
+        link.href = shortcut.url;
+        link.dataset.priority = shortcut.priority;
+        
+        if (shortcut.isWidget) {
+            link.onclick = (e) => {
+                e.preventDefault();
+                showWeatherWidget();
+            };
+        }
+        
+        const icon = document.createElement('img');
+        icon.src = `https://www.google.com/s2/favicons?domain=${shortcut.domain}&sz=64`;
+        icon.alt = shortcut.name;
+        icon.onerror = function() {
+            this.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text y="20" font-size="20">🔗</text></svg>';
+        };
+        
+        const name = document.createElement('span');
+        name.textContent = shortcut.name;
+        
+        link.appendChild(icon);
+        link.appendChild(name);
+        shortcutsGrid.appendChild(link);
+    });
+}
+
+// Navigation router check
+function checkNavigation(query) {
+    const cleaned = query.toLowerCase().trim();
+    return navigationRouter[cleaned];
+}
 
 // Handle Enter key
 input.addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
-        search();
+        handleSearch();
     }
 });
 
-function search() {
+// Hide shortcuts when searching
+function hideShortcuts() {
+    shortcutsSection.style.display = 'none';
+}
+
+// Show shortcuts
+function showShortcuts() {
+    shortcutsSection.style.display = 'block';
+}
+
+function handleSearch() {
     const q = input.value.trim();
     if (!q) return;
+    
+    // Check if it's a navigation query
+    const navUrl = checkNavigation(q);
+    if (navUrl) {
+        window.location.href = navUrl;
+        return;
+    }
+    
+    // Otherwise, perform search
+    search(q);
+}
 
+function search(query) {
+    hideShortcuts();
     resultsDiv.innerHTML = '<div class="loading">Searching...</div>';
 
-    // Call the API endpoint (works on Vercel)
-    fetch(`/api/search?q=${encodeURIComponent(q)}`)
+    fetch(`/api/search?q=${encodeURIComponent(query)}`)
         .then(res => {
             if (!res.ok) throw new Error("Search failed");
             return res.json();
@@ -247,12 +469,25 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+function showWeatherWidget() {
+    alert('Weather widget coming soon! Will show current weather and forecast.');
+    // TODO: Implement weather widget with OpenWeatherMap API
+}
+
+// Clear search and show shortcuts when input is cleared
+input.addEventListener('input', function() {
+    if (this.value.trim() === '' && resultsDiv.innerHTML !== '') {
+        resultsDiv.innerHTML = '';
+        showShortcuts();
+    }
+});
+
 // Optional: Search on page load if there's a query parameter
 const urlParams = new URLSearchParams(window.location.search);
 const queryParam = urlParams.get('q');
 if (queryParam) {
     input.value = queryParam;
-    search();
+    handleSearch();
 }
 </script>
 

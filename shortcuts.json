@@ -1,0 +1,327 @@
+[
+  {
+    "id": "youtube",
+    "name": "YouTube",
+    "url": "https://youtube.com",
+    "domain": "youtube.com",
+    "category": "social",
+    "priority": 1,
+    "searchVolume": 100
+  },
+  {
+    "id": "gmail",
+    "name": "Gmail",
+    "url": "https://mail.google.com",
+    "domain": "mail.google.com",
+    "category": "google",
+    "priority": 1,
+    "searchVolume": 12
+  },
+  {
+    "id": "amazon",
+    "name": "Amazon",
+    "url": "https://amazon.com",
+    "domain": "amazon.com",
+    "category": "shopping",
+    "priority": 1,
+    "searchVolume": 26
+  },
+  {
+    "id": "facebook",
+    "name": "Facebook",
+    "url": "https://facebook.com",
+    "domain": "facebook.com",
+    "category": "social",
+    "priority": 1,
+    "searchVolume": 16
+  },
+  {
+    "id": "reddit",
+    "name": "Reddit",
+    "url": "https://reddit.com",
+    "domain": "reddit.com",
+    "category": "social",
+    "priority": 1,
+    "searchVolume": 21
+  },
+  {
+    "id": "claude",
+    "name": "Claude",
+    "url": "https://claude.ai",
+    "domain": "claude.ai",
+    "category": "ai",
+    "priority": 1,
+    "searchVolume": 5
+  },
+  {
+    "id": "twitter",
+    "name": "Twitter/X",
+    "url": "https://x.com",
+    "domain": "x.com",
+    "category": "social",
+    "priority": 1,
+    "searchVolume": 10
+  },
+  {
+    "id": "maps",
+    "name": "Google Maps",
+    "url": "https://maps.google.com",
+    "domain": "maps.google.com",
+    "category": "google",
+    "priority": 1,
+    "searchVolume": 15
+  },
+  {
+    "id": "linkedin",
+    "name": "LinkedIn",
+    "url": "https://linkedin.com",
+    "domain": "linkedin.com",
+    "category": "social",
+    "priority": 1,
+    "searchVolume": 8
+  },
+  {
+    "id": "chatgpt",
+    "name": "ChatGPT",
+    "url": "https://chat.openai.com",
+    "domain": "chat.openai.com",
+    "category": "ai",
+    "priority": 1,
+    "searchVolume": 11
+  },
+  {
+    "id": "grok",
+    "name": "Grok",
+    "url": "https://x.ai",
+    "domain": "x.ai",
+    "category": "ai",
+    "priority": 1,
+    "searchVolume": 3
+  },
+  {
+    "id": "gemini",
+    "name": "Gemini",
+    "url": "https://gemini.google.com",
+    "domain": "gemini.google.com",
+    "category": "ai",
+    "priority": 1,
+    "searchVolume": 8
+  },
+  {
+    "id": "wikipedia",
+    "name": "Wikipedia",
+    "url": "https://wikipedia.org",
+    "domain": "wikipedia.org",
+    "category": "info",
+    "priority": 1,
+    "searchVolume": 12
+  },
+  {
+    "id": "weather",
+    "name": "Weather",
+    "url": "#",
+    "domain": "weather",
+    "category": "utility",
+    "priority": 1,
+    "searchVolume": 46,
+    "isWidget": true
+  },
+  {
+    "id": "walmart",
+    "name": "Walmart",
+    "url": "https://walmart.com",
+    "domain": "walmart.com",
+    "category": "shopping",
+    "priority": 1,
+    "searchVolume": 15
+  },
+  {
+    "id": "target",
+    "name": "Target",
+    "url": "https://target.com",
+    "domain": "target.com",
+    "category": "shopping",
+    "priority": 1,
+    "searchVolume": 8
+  },
+  {
+    "id": "instagram",
+    "name": "Instagram",
+    "url": "https://instagram.com",
+    "domain": "instagram.com",
+    "category": "social",
+    "priority": 2,
+    "searchVolume": 8
+  },
+  {
+    "id": "netflix",
+    "name": "Netflix",
+    "url": "https://netflix.com",
+    "domain": "netflix.com",
+    "category": "entertainment",
+    "priority": 2,
+    "searchVolume": 7
+  },
+  {
+    "id": "costco",
+    "name": "Costco",
+    "url": "https://costco.com",
+    "domain": "costco.com",
+    "category": "shopping",
+    "priority": 2,
+    "searchVolume": 8
+  },
+  {
+    "id": "ebay",
+    "name": "eBay",
+    "url": "https://ebay.com",
+    "domain": "ebay.com",
+    "category": "shopping",
+    "priority": 2,
+    "searchVolume": 6
+  },
+  {
+    "id": "homedepot",
+    "name": "Home Depot",
+    "url": "https://homedepot.com",
+    "domain": "homedepot.com",
+    "category": "shopping",
+    "priority": 2,
+    "searchVolume": 10
+  },
+  {
+    "id": "lowes",
+    "name": "Lowe's",
+    "url": "https://lowes.com",
+    "domain": "lowes.com",
+    "category": "shopping",
+    "priority": 2,
+    "searchVolume": 7
+  },
+  {
+    "id": "bestbuy",
+    "name": "Best Buy",
+    "url": "https://bestbuy.com",
+    "domain": "bestbuy.com",
+    "category": "shopping",
+    "priority": 2,
+    "searchVolume": 6
+  },
+  {
+    "id": "newegg",
+    "name": "Newegg",
+    "url": "https://newegg.com",
+    "domain": "newegg.com",
+    "category": "shopping",
+    "priority": 2,
+    "searchVolume": 3
+  },
+  {
+    "id": "craigslist",
+    "name": "Craigslist",
+    "url": "https://craigslist.org",
+    "domain": "craigslist.org",
+    "category": "shopping",
+    "priority": 2,
+    "searchVolume": 5
+  },
+  {
+    "id": "usps",
+    "name": "USPS",
+    "url": "https://usps.com",
+    "domain": "usps.com",
+    "category": "services",
+    "priority": 2,
+    "searchVolume": 8
+  },
+  {
+    "id": "ups",
+    "name": "UPS",
+    "url": "https://ups.com",
+    "domain": "ups.com",
+    "category": "services",
+    "priority": 2,
+    "searchVolume": 6
+  },
+  {
+    "id": "fedex",
+    "name": "FedEx",
+    "url": "https://fedex.com",
+    "domain": "fedex.com",
+    "category": "services",
+    "priority": 2,
+    "searchVolume": 6
+  },
+  {
+    "id": "indeed",
+    "name": "Indeed",
+    "url": "https://indeed.com",
+    "domain": "indeed.com",
+    "category": "services",
+    "priority": 2,
+    "searchVolume": 7
+  },
+  {
+    "id": "spotify",
+    "name": "Spotify",
+    "url": "https://spotify.com",
+    "domain": "spotify.com",
+    "category": "entertainment",
+    "priority": 2,
+    "searchVolume": 9
+  },
+  {
+    "id": "expedia",
+    "name": "Expedia",
+    "url": "https://expedia.com",
+    "domain": "expedia.com",
+    "category": "travel",
+    "priority": 2,
+    "searchVolume": 5
+  },
+  {
+    "id": "booking",
+    "name": "Booking",
+    "url": "https://booking.com",
+    "domain": "booking.com",
+    "category": "travel",
+    "priority": 2,
+    "searchVolume": 5
+  },
+  {
+    "id": "chase",
+    "name": "Chase",
+    "url": "https://chase.com",
+    "domain": "chase.com",
+    "category": "banking",
+    "priority": 2,
+    "searchVolume": 10
+  },
+  {
+    "id": "wellsfargo",
+    "name": "Wells Fargo",
+    "url": "https://wellsfargo.com",
+    "domain": "wellsfargo.com",
+    "category": "banking",
+    "priority": 2,
+    "searchVolume": 8
+  },
+  {
+    "id": "capitalone",
+    "name": "Capital One",
+    "url": "https://capitalone.com",
+    "domain": "capitalone.com",
+    "category": "banking",
+    "priority": 2,
+    "searchVolume": 7
+  },
+  {
+    "id": "bankofamerica",
+    "name": "Bank of America",
+    "url": "https://bankofamerica.com",
+    "domain": "bankofamerica.com",
+    "category": "banking",
+    "priority": 2,
+    "searchVolume": 9
+  }
+]
