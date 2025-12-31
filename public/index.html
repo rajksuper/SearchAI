@@ -12,6 +12,69 @@ body {
     padding: 0;
 }
 
+/* Dark mode for mobile */
+@media (max-width: 768px) {
+    body {
+        background: #0d0d0d;
+        color: #e8eaed;
+    }
+    
+    .logo {
+        color: #e8eaed;
+    }
+    
+    .tagline {
+        color: #9aa0a6;
+    }
+    
+    .search-box {
+        background: #202124;
+        border: 1px solid #5f6368;
+        color: #e8eaed;
+    }
+    
+    .search-box::placeholder {
+        color: #9aa0a6;
+    }
+    
+    .search-suggestion {
+        color: #5f6368;
+    }
+    
+    .result {
+        background: #202124;
+        border-bottom: 1px solid #5f6368;
+    }
+    
+    .result-url-text {
+        color: #e8eaed;
+    }
+    
+    .result-title a {
+        color: #8ab4f8;
+    }
+    
+    .result-title a:visited {
+        color: #c58af9;
+    }
+    
+    .result-snippet {
+        color: #bdc1c6;
+    }
+    
+    .read-more {
+        color: #8ab4f8;
+    }
+    
+    .loading {
+        color: #9aa0a6;
+    }
+    
+    .error {
+        color: #f28b82;
+    }
+}
+
 .container {
     max-width: 652px;
     margin: 20px auto;
@@ -20,18 +83,27 @@ body {
 
 .header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .logo {
-    font-size: 28px;
+    font-size: 48px;
+    font-weight: 400;
     color: #202124;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
+    letter-spacing: -1px;
+}
+
+.tagline {
+    font-size: 13px;
+    color: #70757a;
+    margin-bottom: 28px;
 }
 
 .search-box {
     width: 100%;
-    padding: 11px 16px;
+    max-width: 584px;
+    padding: 13px 16px;
     font-size: 16px;
     border: 1px solid #dfe1e5;
     border-radius: 24px;
@@ -40,11 +112,14 @@ body {
     position: relative;
     background: transparent;
     z-index: 2;
+    margin: 0 auto;
+    display: block;
 }
 
 .search-wrapper {
     position: relative;
-    margin-bottom: 20px;
+    max-width: 584px;
+    margin: 0 auto 20px;
 }
 
 .search-suggestion {
@@ -52,7 +127,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    padding: 11px 16px;
+    padding: 13px 16px;
     font-size: 16px;
     border: 1px solid transparent;
     border-radius: 24px;
@@ -237,6 +312,7 @@ body {
 <div class="container">
     <div class="header">
         <div class="logo">Search AI</div>
+        <div class="tagline">Fast. Clean. No spam.</div>
     </div>
     
     <div class="search-wrapper">
@@ -278,6 +354,13 @@ fetch('/navigation-router.json')
 function renderShortcuts() {
     shortcutsGrid.innerHTML = '';
     
+    // Custom icons for services without good favicons
+    const customIcons = {
+        'gmail': '📧',
+        'maps': '🗺️',
+        'weather': '⛅'
+    };
+    
     shortcuts.forEach(shortcut => {
         const link = document.createElement('a');
         link.className = 'shortcut';
@@ -294,14 +377,19 @@ function renderShortcuts() {
         const iconWrapper = document.createElement('div');
         iconWrapper.className = 'shortcut-icon';
         
-        const icon = document.createElement('img');
-        icon.src = `https://www.google.com/s2/favicons?domain=${shortcut.domain}&sz=32`;
-        icon.alt = shortcut.name;
+        // Use custom emoji for certain services, favicon for others
+        if (customIcons[shortcut.id]) {
+            iconWrapper.innerHTML = `<span style="font-size: 32px;">${customIcons[shortcut.id]}</span>`;
+        } else {
+            const icon = document.createElement('img');
+            icon.src = `https://www.google.com/s2/favicons?domain=${shortcut.domain}&sz=32`;
+            icon.alt = shortcut.name;
+            iconWrapper.appendChild(icon);
+        }
         
         const name = document.createElement('span');
         name.textContent = shortcut.name;
         
-        iconWrapper.appendChild(icon);
         link.appendChild(iconWrapper);
         link.appendChild(name);
         shortcutsGrid.appendChild(link);
