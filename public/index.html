@@ -437,6 +437,8 @@ body {
     .weather-widget {
         background: #2d2d2d;
         box-shadow: 0 1px 6px rgba(0,0,0,0.3);
+        max-width: 100%;
+        margin: 20px 0;
     }
     
     .weather-location,
@@ -461,6 +463,34 @@ body {
         border-top-color: #5f6368;
     }
     
+    /* Hourly forecast - single horizontal line with scroll */
+    .weather-widget-full > div:first-child > div:last-child {
+        display: flex !important;
+        overflow-x: auto !important;
+        gap: 20px !important;
+        padding: 12px 0 !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .weather-widget-full > div:first-child > div:last-child > div {
+        flex-shrink: 0 !important;
+        min-width: 70px !important;
+    }
+    
+    /* Hide scrollbar but keep functionality */
+    .weather-widget-full > div:first-child > div:last-child::-webkit-scrollbar {
+        height: 4px;
+    }
+    
+    .weather-widget-full > div:first-child > div:last-child::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    .weather-widget-full > div:first-child > div:last-child::-webkit-scrollbar-thumb {
+        background: #5f6368;
+        border-radius: 2px;
+    }
+    
     .weather-location-input {
         background: #3c4043;
         border-color: #5f6368;
@@ -473,6 +503,15 @@ body {
     
     .shortcut-icon {
         background: #3c4043;
+    }
+    
+    /* Mobile-specific weather detail colors */
+    .weather-widget div[style*="color: #70757a"] {
+        color: #9aa0a6 !important;
+    }
+    
+    .weather-widget div[style*="color: #202124"] {
+        color: #e8eaed !important;
     }
 }
 
