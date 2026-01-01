@@ -140,7 +140,7 @@ body {
     border-radius: 12px;
     padding: 16px 20px;
     box-shadow: 0 1px 6px rgba(0,0,0,0.1);
-    max-width: 400px;
+    max-width: 584px;
     margin: 20px auto;
     transition: all 0.2s;
 }
@@ -218,6 +218,7 @@ body {
     cursor: pointer;
     margin-top: 12px;
     width: 100%;
+    font-family: arial, sans-serif;
 }
 
 .weather-expand-btn:hover {
@@ -287,6 +288,34 @@ body {
 
 .weather-location-input:focus {
     border-color: #1a73e8;
+}
+
+/* Hourly forecast - single horizontal line on all devices */
+.hourly-forecast-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 16px;
+    padding: 12px 0;
+    -webkit-overflow-scrolling: touch;
+}
+
+.hourly-forecast-container::-webkit-scrollbar {
+    height: 4px;
+}
+
+.hourly-forecast-container::-webkit-scrollbar-track {
+    background: #f1f3f4;
+}
+
+.hourly-forecast-container::-webkit-scrollbar-thumb {
+    background: #dadce0;
+    border-radius: 2px;
+}
+
+.hourly-item {
+    flex-shrink: 0;
+    text-align: center;
+    min-width: 70px;
 }
 
 /* Results */
@@ -454,41 +483,22 @@ body {
     }
     
     .weather-expand-btn {
-        background: #3c4043;
-        border-color: #5f6368;
-        color: #e8eaed;
+        background: #3c4043 !important;
+        border-color: #5f6368 !important;
+        color: #e8eaed !important;
     }
     
     .weather-widget-full {
         border-top-color: #5f6368;
     }
     
-    /* Hourly forecast - single horizontal line with scroll */
-    .weather-widget-full > div:first-child > div:last-child {
-        display: flex !important;
-        overflow-x: auto !important;
-        gap: 20px !important;
-        padding: 12px 0 !important;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    .weather-widget-full > div:first-child > div:last-child > div {
-        flex-shrink: 0 !important;
-        min-width: 70px !important;
-    }
-    
-    /* Hide scrollbar but keep functionality */
-    .weather-widget-full > div:first-child > div:last-child::-webkit-scrollbar {
-        height: 4px;
-    }
-    
-    .weather-widget-full > div:first-child > div:last-child::-webkit-scrollbar-track {
+    /* Mobile hourly forecast scrollbar */
+    .hourly-forecast-container::-webkit-scrollbar-track {
         background: transparent;
     }
     
-    .weather-widget-full > div:first-child > div:last-child::-webkit-scrollbar-thumb {
+    .hourly-forecast-container::-webkit-scrollbar-thumb {
         background: #5f6368;
-        border-radius: 2px;
     }
     
     .weather-location-input {
@@ -708,11 +718,11 @@ function showWeatherWidget(data) {
                     <div style="font-size: 14px; font-weight: 600; color: #202124; margin-bottom: 12px;">
                         Hourly Forecast - ${forecast[selectedDay].date === forecast[0].date ? 'Today' : new Date(forecast[selectedDay].date).toLocaleDateString('en-US', { weekday: 'long' })}
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 12px; padding: 12px 0;">
+                    <div class="hourly-forecast-container">
                         ${hourly.filter((_, i) => i % 3 === 0).map(hour => {
                             const time = new Date(hour.time).toLocaleTimeString('en-US', { hour: 'numeric' });
                             return `
-                                <div style="text-align: center;">
+                                <div class="hourly-item">
                                     <div style="font-size: 12px; color: #70757a; margin-bottom: 8px;">${time}</div>
                                     <img src="https:${hour.condition.icon}" alt="${hour.condition.text}" style="width: 40px; height: 40px; margin: 0 auto;" />
                                     <div style="font-size: 16px; font-weight: 600; color: #202124; margin-top: 8px;">${Math.round(hour.temp_f)}°</div>
