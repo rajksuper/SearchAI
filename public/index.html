@@ -3,76 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Search AI</title>
+<title>Search AI - Fast. Clean. No spam.</title>
 <style>
 body {
     font-family: arial, sans-serif;
     background: #fff;
     margin: 0;
     padding: 0;
-}
-
-/* Dark mode for mobile */
-@media (max-width: 768px) {
-    body {
-        background: #0d0d0d;
-        color: #e8eaed;
-    }
-    
-    .logo {
-        color: #e8eaed;
-    }
-    
-    .tagline {
-        color: #9aa0a6;
-    }
-    
-    .search-box {
-        background: #202124;
-        border: 1px solid #5f6368;
-        color: #e8eaed;
-    }
-    
-    .search-box::placeholder {
-        color: #9aa0a6;
-    }
-    
-    .search-suggestion {
-        color: #5f6368;
-    }
-    
-    .result {
-        background: #202124;
-        border-bottom: 1px solid #5f6368;
-    }
-    
-    .result-url-text {
-        color: #e8eaed;
-    }
-    
-    .result-title a {
-        color: #8ab4f8;
-    }
-    
-    .result-title a:visited {
-        color: #c58af9;
-    }
-    
-    .result-snippet {
-        color: #bdc1c6;
-    }
-    
-    .read-more {
-        color: #8ab4f8;
-    }
-    
-    .loading {
-        color: #9aa0a6;
-    }
-    
-    .error {
-        color: #f28b82;
-    }
 }
 
 .container {
@@ -116,6 +53,16 @@ body {
     display: block;
 }
 
+.search-box:hover {
+    border-color: #ccc;
+    box-shadow: 0 1px 6px rgba(32,33,36,.28);
+}
+
+.search-box:focus {
+    border-color: transparent;
+    box-shadow: 0 1px 6px rgba(32,33,36,.28);
+}
+
 .search-wrapper {
     position: relative;
     max-width: 584px;
@@ -137,16 +84,6 @@ body {
     z-index: 1;
 }
 
-.search-box:hover {
-    border-color: #ccc;
-    box-shadow: 0 1px 6px rgba(32,33,36,.28);
-}
-
-.search-box:focus {
-    border-color: transparent;
-    box-shadow: 0 1px 6px rgba(32,33,36,.28);
-}
-
 /* Shortcuts */
 .shortcuts-section {
     margin: 30px 0;
@@ -158,6 +95,45 @@ body {
     gap: 8px;
 }
 
+.shortcut {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    text-decoration: none;
+    color: #202124;
+    cursor: pointer;
+}
+
+.shortcut:hover {
+    opacity: 0.8;
+}
+
+.shortcut-icon {
+    width: 56px;
+    height: 56px;
+    background: #f1f3f4;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.shortcut img {
+    width: 32px;
+    height: 32px;
+}
+
+.shortcut span {
+    font-size: 13px;
+    text-align: center;
+}
+
+.shortcut[data-priority="2"] {
+    display: none;
+}
+
 /* Weather Widget */
 .weather-widget {
     background: white;
@@ -166,7 +142,6 @@ body {
     box-shadow: 0 1px 6px rgba(0,0,0,0.1);
     max-width: 400px;
     margin: 20px auto;
-    cursor: pointer;
     transition: all 0.2s;
 }
 
@@ -263,7 +238,6 @@ body {
 .weather-forecast {
     display: flex;
     gap: 12px;
-    overflow-x: auto;
     padding: 12px 0;
 }
 
@@ -298,31 +272,6 @@ body {
     color: #70757a;
 }
 
-.weather-details {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-top: 16px;
-}
-
-.weather-detail-item {
-    background: #f8f9fa;
-    padding: 12px;
-    border-radius: 8px;
-}
-
-.weather-detail-label {
-    font-size: 12px;
-    color: #70757a;
-    margin-bottom: 4px;
-}
-
-.weather-detail-value {
-    font-size: 16px;
-    font-weight: 600;
-    color: #202124;
-}
-
 .weather-change-location {
     margin-top: 16px;
 }
@@ -340,89 +289,7 @@ body {
     border-color: #1a73e8;
 }
 
-/* Mobile dark mode for weather */
-@media (max-width: 768px) {
-    .weather-widget {
-        background: #202124;
-        box-shadow: 0 1px 6px rgba(255,255,255,0.1);
-    }
-    
-    .weather-location,
-    .weather-temp,
-    .weather-condition,
-    .weather-detail-value {
-        color: #e8eaed;
-    }
-    
-    .weather-time,
-    .weather-unit,
-    .weather-detail-label,
-    .forecast-day-name,
-    .forecast-temp-low {
-        color: #9aa0a6;
-    }
-    
-    .weather-expand-btn {
-        background: #303134;
-        border-color: #5f6368;
-        color: #e8eaed;
-    }
-    
-    .weather-widget-full {
-        border-top-color: #5f6368;
-    }
-    
-    .weather-detail-item {
-        background: #303134;
-    }
-    
-    .weather-location-input {
-        background: #303134;
-        border-color: #5f6368;
-        color: #e8eaed;
-    }
-}
-
-.shortcut {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 8px;
-    text-decoration: none;
-    color: #202124;
-    cursor: pointer;
-}
-
-.shortcut:hover {
-    opacity: 0.8;
-}
-
-.shortcut-icon {
-    width: 56px;
-    height: 56px;
-    background: #f1f3f4;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 8px;
-}
-
-.shortcut img {
-    width: 32px;
-    height: 32px;
-}
-
-.shortcut span {
-    font-size: 13px;
-    text-align: center;
-}
-
-.shortcut[data-priority="2"] {
-    display: none;
-}
-
-/* Results - Google style */
+/* Results */
 .results-container {
     margin-top: 20px;
 }
@@ -502,6 +369,113 @@ body {
     padding: 20px 0;
 }
 
+/* Mobile Dark Mode */
+@media (max-width: 768px) {
+    body {
+        background: #1a1a1a;
+        color: #e8eaed;
+    }
+    
+    .logo {
+        color: #e8eaed;
+    }
+    
+    .tagline {
+        color: #9aa0a6;
+    }
+    
+    .search-box {
+        background: #2d2d2d;
+        border: 1px solid #3c4043;
+        color: #e8eaed;
+    }
+    
+    .search-box::placeholder {
+        color: #9aa0a6;
+    }
+    
+    .search-suggestion {
+        color: #5f6368;
+    }
+    
+    .result {
+        background: #2d2d2d;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+    }
+    
+    .result-url-text {
+        color: #9aa0a6;
+    }
+    
+    .result-title a {
+        color: #8ab4f8;
+    }
+    
+    .result-title a:visited {
+        color: #c58af9;
+    }
+    
+    .result-snippet {
+        color: #bdc1c6;
+    }
+    
+    .read-more {
+        color: #8ab4f8;
+    }
+    
+    .loading {
+        color: #9aa0a6;
+    }
+    
+    .error {
+        color: #f28b82;
+    }
+    
+    /* Weather widget dark mode */
+    .weather-widget {
+        background: #2d2d2d;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.3);
+    }
+    
+    .weather-location,
+    .weather-temp {
+        color: #e8eaed;
+    }
+    
+    .weather-time,
+    .weather-unit,
+    .forecast-day-name,
+    .forecast-temp-low {
+        color: #9aa0a6;
+    }
+    
+    .weather-expand-btn {
+        background: #3c4043;
+        border-color: #5f6368;
+        color: #e8eaed;
+    }
+    
+    .weather-widget-full {
+        border-top-color: #5f6368;
+    }
+    
+    .weather-location-input {
+        background: #3c4043;
+        border-color: #5f6368;
+        color: #e8eaed;
+    }
+    
+    .shortcut {
+        color: #e8eaed;
+    }
+    
+    .shortcut-icon {
+        background: #3c4043;
+    }
+}
+
 /* Tablet */
 @media (min-width: 768px) {
     .shortcuts-grid {
@@ -522,12 +496,12 @@ body {
 /* Desktop */
 @media (min-width: 1200px) {
     .shortcuts-grid {
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 8px;
     }
     
     .shortcut[data-priority="2"] {
-        display: flex;
+        display: none;
     }
 }
 </style>
@@ -561,10 +535,17 @@ const suggestionInput = document.getElementById("searchSuggestion");
 const resultsDiv = document.getElementById("results");
 const shortcutsSection = document.getElementById("shortcutsSection");
 const shortcutsGrid = document.getElementById("shortcutsGrid");
+const weatherWidget = document.getElementById("weatherWidget");
 
 let shortcuts = [];
 let navigationRouter = {};
 let currentSuggestion = '';
+
+// Weather API configuration
+const WEATHER_API_KEY = '398b15f1e90c45738c260159260101';
+let savedLocation = localStorage.getItem('weatherLocation') || 'auto:ip';
+let weatherExpanded = false;
+let selectedDay = 0;
 
 fetch('/shortcuts.json')
     .then(res => res.json())
@@ -582,55 +563,203 @@ fetch('/navigation-router.json')
 function renderShortcuts() {
     shortcutsGrid.innerHTML = '';
     
-    // Custom icons for services without good favicons
-    const customIcons = {
-        'gmail': '📧',
-        'maps': '🗺️',
-        'weather': '⛅'
-    };
-    
     shortcuts.forEach(shortcut => {
         const link = document.createElement('a');
         link.className = 'shortcut';
         link.href = shortcut.url;
         link.dataset.priority = shortcut.priority;
         
-        if (shortcut.isWidget) {
-            link.onclick = (e) => {
-                e.preventDefault();
-                alert('Weather widget coming soon!');
-            };
-        }
-        
         const iconWrapper = document.createElement('div');
         iconWrapper.className = 'shortcut-icon';
         
-        // Use custom emoji for certain services, favicon for others
-        if (customIcons[shortcut.id]) {
-            iconWrapper.innerHTML = `<span style="font-size: 32px;">${customIcons[shortcut.id]}</span>`;
-        } else {
-            const icon = document.createElement('img');
-            icon.src = `https://www.google.com/s2/favicons?domain=${shortcut.domain}&sz=32`;
-            icon.alt = shortcut.name;
-            iconWrapper.appendChild(icon);
-        }
+        const icon = document.createElement('img');
+        icon.src = `https://www.google.com/s2/favicons?domain=${shortcut.domain}&sz=32`;
+        icon.alt = shortcut.name;
         
         const name = document.createElement('span');
         name.textContent = shortcut.name;
         
+        iconWrapper.appendChild(icon);
         link.appendChild(iconWrapper);
         link.appendChild(name);
         shortcutsGrid.appendChild(link);
     });
 }
 
-// Find best matching suggestion
+// Weather Functions
+async function fetchWeather(location = savedLocation) {
+    try {
+        const response = await fetch(
+            `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${location}&days=3&aqi=yes`
+        );
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Weather fetch error:', error);
+        return null;
+    }
+}
+
+function showWeatherWidget(data) {
+    if (!data) return;
+    
+    const current = data.current;
+    const location = data.location;
+    const forecast = data.forecast.forecastday;
+    const hourly = forecast[selectedDay].hour;
+    
+    const rainDistance = current.precip_mm > 0 ? 'It\'s raining now' : 'No rain nearby';
+    
+    weatherWidget.innerHTML = `
+        <div class="weather-widget">
+            <div class="weather-widget-small">
+                <div style="flex: 1;">
+                    <div class="weather-location">
+                        <span>${location.name}, ${location.region}</span>
+                        <span style="cursor: pointer;" onclick="event.stopPropagation(); toggleLocationInput()">🏠</span>
+                    </div>
+                    <div class="weather-time">As of ${new Date(current.last_updated).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</div>
+                    
+                    <div style="display: flex; gap: 20px; align-items: flex-start;">
+                        <div class="weather-main">
+                            <img src="https:${current.condition.icon}" alt="${current.condition.text}" class="weather-icon" />
+                            <div>
+                                <span class="weather-temp">${Math.round(current.temp_f)}</span>
+                                <span class="weather-unit">°F</span>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px; margin-top: 8px;">
+                            <div>
+                                <div style="color: #70757a;">Visibility</div>
+                                <div style="font-weight: 600; color: #202124;">${current.vis_miles} mi</div>
+                            </div>
+                            <div>
+                                <div style="color: #70757a;">Pressure</div>
+                                <div style="font-weight: 600; color: #202124;">${current.pressure_in} in</div>
+                            </div>
+                            <div>
+                                <div style="color: #70757a;">Humidity</div>
+                                <div style="font-weight: 600; color: #202124;">${current.humidity}%</div>
+                            </div>
+                            <div>
+                                <div style="color: #70757a;">UV Index</div>
+                                <div style="font-weight: 600; color: #202124;">${current.uv}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="weather-rain-info">
+                        <span>ℹ️</span>
+                        <span>${rainDistance}</span>
+                    </div>
+                    
+                    <div class="weather-change-location" style="display: none; margin-top: 12px;" id="locationChanger">
+                        <input type="text" class="weather-location-input" placeholder="Enter city name..." id="locationInput" onkeypress="if(event.key==='Enter') updateLocation()" />
+                    </div>
+                </div>
+            </div>
+            
+            <button class="weather-expand-btn" onclick="toggleWeatherExpand()">
+                <span id="expandBtnText">${weatherExpanded ? 'Show less' : 'See full forecast'}</span>
+            </button>
+            
+            <div class="weather-widget-full ${weatherExpanded ? 'expanded' : ''}" id="weatherFull">
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #202124; margin-bottom: 12px;">
+                        Hourly Forecast - ${forecast[selectedDay].date === forecast[0].date ? 'Today' : new Date(forecast[selectedDay].date).toLocaleDateString('en-US', { weekday: 'long' })}
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 12px; padding: 12px 0;">
+                        ${hourly.filter((_, i) => i % 3 === 0).map(hour => {
+                            const time = new Date(hour.time).toLocaleTimeString('en-US', { hour: 'numeric' });
+                            return `
+                                <div style="text-align: center;">
+                                    <div style="font-size: 12px; color: #70757a; margin-bottom: 8px;">${time}</div>
+                                    <img src="https:${hour.condition.icon}" alt="${hour.condition.text}" style="width: 40px; height: 40px; margin: 0 auto;" />
+                                    <div style="font-size: 16px; font-weight: 600; color: #202124; margin-top: 8px;">${Math.round(hour.temp_f)}°</div>
+                                    <div style="font-size: 11px; color: #70757a; margin-top: 4px;">${hour.chance_of_rain}%</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                
+                <div style="margin-top: 16px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #202124; margin-bottom: 12px;">3-Day Forecast</div>
+                    <div class="weather-forecast">
+                        ${forecast.map((day, index) => `
+                            <div class="forecast-day" onclick="event.stopPropagation(); selectDay(${index})" style="cursor: pointer; opacity: ${selectedDay === index ? '1' : '0.7'}; transform: ${selectedDay === index ? 'scale(1.05)' : 'scale(1)'}; transition: all 0.2s;">
+                                <div class="forecast-day-name">${index === 0 ? 'Today' : new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                                <img src="https:${day.day.condition.icon}" alt="${day.day.condition.text}" class="forecast-icon" />
+                                <div class="forecast-temp">
+                                    <span class="forecast-temp-high">${Math.round(day.day.maxtemp_f)}°</span>
+                                    <span class="forecast-temp-low">${Math.round(day.day.mintemp_f)}°</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    weatherWidget.style.display = 'block';
+    shortcutsSection.style.display = 'none';
+}
+
+function toggleWeatherExpand() {
+    weatherExpanded = !weatherExpanded;
+    const weatherData = window.currentWeatherData;
+    if (weatherData) {
+        showWeatherWidget(weatherData);
+    }
+}
+
+function toggleLocationInput() {
+    const changer = document.getElementById('locationChanger');
+    changer.style.display = changer.style.display === 'none' ? 'block' : 'none';
+    if (changer.style.display === 'block') {
+        document.getElementById('locationInput').focus();
+    }
+}
+
+function selectDay(dayIndex) {
+    selectedDay = dayIndex;
+    const weatherData = window.currentWeatherData;
+    if (weatherData) {
+        showWeatherWidget(weatherData);
+    }
+}
+
+async function updateLocation() {
+    const newLocation = document.getElementById('locationInput').value.trim();
+    if (newLocation) {
+        savedLocation = newLocation;
+        localStorage.setItem('weatherLocation', newLocation);
+        const data = await fetchWeather(newLocation);
+        if (data) {
+            window.currentWeatherData = data;
+            showWeatherWidget(data);
+            toggleLocationInput();
+        }
+    }
+}
+
+// Load weather on page load
+(async function() {
+    const weatherData = await fetchWeather();
+    if (weatherData) {
+        window.currentWeatherData = weatherData;
+        showWeatherWidget(weatherData);
+    }
+})();
+
+// Autocomplete
 function findSuggestion(query) {
     if (!query || query.length < 2) return '';
     
     const cleaned = query.toLowerCase().trim();
     
-    // Find exact match or starts-with match
     for (let key in navigationRouter) {
         if (key.startsWith(cleaned) && key !== cleaned) {
             return key;
@@ -640,14 +769,12 @@ function findSuggestion(query) {
     return '';
 }
 
-// Update suggestion display
 function updateSuggestion() {
     const query = input.value;
     const suggestion = findSuggestion(query);
     
     if (suggestion && query.length >= 2) {
         currentSuggestion = suggestion;
-        // Show query in normal text + rest in gray
         suggestionInput.value = query + suggestion.slice(query.length);
     } else {
         currentSuggestion = '';
@@ -655,7 +782,6 @@ function updateSuggestion() {
     }
 }
 
-// Complete the suggestion
 function completeSuggestion() {
     if (currentSuggestion) {
         input.value = currentSuggestion;
@@ -665,29 +791,26 @@ function completeSuggestion() {
     }
 }
 
-// Check navigation
 function checkNavigation(query) {
     const cleaned = query.toLowerCase().trim();
     return navigationRouter[cleaned];
 }
 
-// Input event - update suggestion as user types
 input.addEventListener("input", function() {
     updateSuggestion();
     
     if (this.value.trim() === '') {
         resultsDiv.innerHTML = '';
-        shortcutsSection.style.display = 'block';
+        weatherWidget.style.display = 'block';
+        shortcutsSection.style.display = 'none';
     }
 });
 
-// Keydown event - handle Enter and Arrow keys
 input.addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
         e.preventDefault();
         handleSearch();
     } else if (e.key === "ArrowRight") {
-        // Complete suggestion with right arrow
         if (currentSuggestion && input.selectionStart === input.value.length) {
             e.preventDefault();
             completeSuggestion();
@@ -695,7 +818,6 @@ input.addEventListener("keydown", function(e) {
     }
 });
 
-// Click/Tap on input - complete suggestion if exists
 input.addEventListener("click", function() {
     if (currentSuggestion) {
         completeSuggestion();
@@ -706,9 +828,23 @@ function handleSearch() {
     const q = input.value.trim();
     if (!q) return;
     
-    // Clear suggestion
     suggestionInput.value = '';
     currentSuggestion = '';
+    
+    // Check if weather query
+    if (q.toLowerCase() === 'weather' || q.toLowerCase().startsWith('weather in ')) {
+        const location = q.toLowerCase().startsWith('weather in ') ? q.slice(11).trim() : savedLocation;
+        fetchWeather(location).then(data => {
+            if (data) {
+                savedLocation = location;
+                localStorage.setItem('weatherLocation', location);
+                window.currentWeatherData = data;
+                showWeatherWidget(data);
+                resultsDiv.innerHTML = '';
+            }
+        });
+        return;
+    }
     
     const navUrl = checkNavigation(q);
     if (navUrl) {
@@ -720,6 +856,7 @@ function handleSearch() {
 }
 
 function search(query) {
+    weatherWidget.style.display = 'none';
     shortcutsSection.style.display = 'none';
     resultsDiv.innerHTML = '<div class="loading">Searching...</div>';
 
@@ -770,207 +907,6 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
-
-// Weather API configuration
-const WEATHER_API_KEY = '398b15f1e90c45738c260159260101';
-let savedLocation = localStorage.getItem('weatherLocation') || 'auto:ip';
-let weatherExpanded = false;
-
-// Weather Functions
-async function fetchWeather(location = savedLocation) {
-    try {
-        const response = await fetch(
-            `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${location}&days=3&aqi=yes`
-        );
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Weather fetch error:', error);
-        return null;
-    }
-}
-
-function showWeatherWidget(data) {
-    if (!data) return;
-    
-    const current = data.current;
-    const location = data.location;
-    const forecast = data.forecast.forecastday;
-    const hourly = forecast[0].hour; // First day's hourly data
-    
-    const rainDistance = current.precip_mm > 0 ? 'It\'s raining now' : 'No rain nearby';
-    
-    weatherWidget.innerHTML = `
-        <div class="weather-widget" onclick="toggleWeatherExpand()">
-            <div class="weather-widget-small">
-                <div style="flex: 1;">
-                    <div class="weather-location">
-                        <span>${location.name}, ${location.region}</span>
-                        <span style="cursor: pointer;" onclick="event.stopPropagation(); changeLocation()">🏠</span>
-                    </div>
-                    <div class="weather-time">As of ${new Date(current.last_updated).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</div>
-                    
-                    <div style="display: flex; gap: 20px; align-items: flex-start;">
-                        <div class="weather-main">
-                            <img src="https:${current.condition.icon}" alt="${current.condition.text}" class="weather-icon" />
-                            <div>
-                                <span class="weather-temp">${Math.round(current.temp_f)}</span>
-                                <span class="weather-unit">°F</span>
-                            </div>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px; margin-top: 8px;">
-                            <div>
-                                <div style="color: #70757a;">Visibility</div>
-                                <div style="font-weight: 600; color: #202124;">${current.vis_miles} mi</div>
-                            </div>
-                            <div>
-                                <div style="color: #70757a;">Pressure</div>
-                                <div style="font-weight: 600; color: #202124;">${current.pressure_in} in</div>
-                            </div>
-                            <div>
-                                <div style="color: #70757a;">Humidity</div>
-                                <div style="font-weight: 600; color: #202124;">${current.humidity}%</div>
-                            </div>
-                            <div>
-                                <div style="color: #70757a;">UV Index</div>
-                                <div style="font-weight: 600; color: #202124;">${current.uv}</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="weather-rain-info">
-                        <span>ℹ️</span>
-                        <span>${rainDistance}</span>
-                    </div>
-                </div>
-            </div>
-            
-            <button class="weather-expand-btn" onclick="event.stopPropagation(); toggleWeatherExpand()">
-                <span id="expandBtnText">See full forecast</span>
-            </button>
-            
-            <div class="weather-widget-full" id="weatherFull">
-                <div style="margin-bottom: 20px;">
-                    <div style="font-size: 14px; font-weight: 600; color: #202124; margin-bottom: 12px;">Hourly Forecast</div>
-                    <div style="display: flex; gap: 16px; overflow-x: auto; padding: 12px 0;">
-                        ${hourly.filter((_, i) => i % 3 === 0).map(hour => {
-                            const time = new Date(hour.time).toLocaleTimeString('en-US', { hour: 'numeric' });
-                            return `
-                                <div style="text-align: center; min-width: 60px;">
-                                    <div style="font-size: 12px; color: #70757a; margin-bottom: 8px;">${time}</div>
-                                    <img src="https:${hour.condition.icon}" alt="${hour.condition.text}" style="width: 40px; height: 40px;" />
-                                    <div style="font-size: 16px; font-weight: 600; color: #202124; margin-top: 8px;">${Math.round(hour.temp_f)}°</div>
-                                    <div style="font-size: 11px; color: #70757a; margin-top: 4px;">${hour.chance_of_rain}%</div>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-                
-                <div style="margin-top: 16px;">
-                    <div style="font-size: 14px; font-weight: 600; color: #202124; margin-bottom: 12px;">3-Day Forecast</div>
-                    <div class="weather-forecast">
-                        ${forecast.map(day => `
-                            <div class="forecast-day">
-                                <div class="forecast-day-name">${new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}</div>
-                                <img src="https:${day.day.condition.icon}" alt="${day.day.condition.text}" class="forecast-icon" />
-                                <div class="forecast-temp">
-                                    <span class="forecast-temp-high">${Math.round(day.day.maxtemp_f)}°</span>
-                                    <span class="forecast-temp-low">${Math.round(day.day.mintemp_f)}°</span>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-                
-                <div class="weather-change-location" style="display: none;" id="locationChanger">
-                    <input type="text" class="weather-location-input" placeholder="Enter city name..." id="locationInput" onkeypress="if(event.key==='Enter') updateLocation()" />
-                </div>
-            </div>
-        </div>
-    `;
-    
-    weatherWidget.style.display = 'block';
-    shortcutsSection.style.display = 'none';
-}
-
-function toggleWeatherExpand() {
-    const fullWidget = document.getElementById('weatherFull');
-    const btnText = document.getElementById('expandBtnText');
-    
-    weatherExpanded = !weatherExpanded;
-    
-    if (weatherExpanded) {
-        fullWidget.classList.add('expanded');
-        btnText.textContent = 'Show less';
-    } else {
-        fullWidget.classList.remove('expanded');
-        btnText.textContent = 'See full forecast';
-    }
-}
-
-function changeLocation() {
-    const changer = document.getElementById('locationChanger');
-    changer.style.display = changer.style.display === 'none' ? 'block' : 'none';
-    if (changer.style.display === 'block') {
-        document.getElementById('locationInput').focus();
-    }
-}
-
-async function updateLocation() {
-    const newLocation = document.getElementById('locationInput').value.trim();
-    if (newLocation) {
-        savedLocation = newLocation;
-        localStorage.setItem('weatherLocation', newLocation);
-        const data = await fetchWeather(newLocation);
-        if (data) {
-            showWeatherWidget(data);
-        }
-    }
-}
-
-// Load weather on page load
-(async function() {
-    const weatherData = await fetchWeather();
-    if (weatherData) {
-        showWeatherWidget(weatherData);
-    }
-})();
-
-// Update handleSearch to include weather detection
-const originalHandleSearch = handleSearch;
-handleSearch = function() {
-    const q = input.value.trim();
-    if (!q) return;
-    
-    suggestionInput.value = '';
-    currentSuggestion = '';
-    
-    // Check if weather query
-    if (q.toLowerCase() === 'weather' || q.toLowerCase().startsWith('weather in ')) {
-        const location = q.toLowerCase().startsWith('weather in ') ? q.slice(11).trim() : savedLocation;
-        fetchWeather(location).then(data => {
-            if (data) {
-                savedLocation = location;
-                localStorage.setItem('weatherLocation', location);
-                showWeatherWidget(data);
-                resultsDiv.innerHTML = '';
-            }
-        });
-        return;
-    }
-    
-    const navUrl = checkNavigation(q);
-    if (navUrl) {
-        window.location.href = navUrl;
-        return;
-    }
-    
-    search(q);
-};
-
-
 </script>
 
 </body>
