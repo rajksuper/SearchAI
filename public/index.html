@@ -796,6 +796,7 @@ function showWeatherWidget(data) {
     const current = data.current;
     const location = data.location;
     const forecast = data.forecast.forecastday;
+    const hourly = forecast[0].hour; // First day's hourly data
     
     const rainDistance = current.precip_mm > 0 ? 'It\'s raining now' : 'No rain nearby';
     
@@ -808,14 +809,36 @@ function showWeatherWidget(data) {
                         <span style="cursor: pointer;" onclick="event.stopPropagation(); changeLocation()">🏠</span>
                     </div>
                     <div class="weather-time">As of ${new Date(current.last_updated).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</div>
-                    <div class="weather-main">
-                        <img src="https:${current.condition.icon}" alt="${current.condition.text}" class="weather-icon" />
-                        <div>
-                            <span class="weather-temp">${Math.round(current.temp_f)}</span>
-                            <span class="weather-unit">°F</span>
+                    
+                    <div style="display: flex; gap: 20px; align-items: flex-start;">
+                        <div class="weather-main">
+                            <img src="https:${current.condition.icon}" alt="${current.condition.text}" class="weather-icon" />
+                            <div>
+                                <span class="weather-temp">${Math.round(current.temp_f)}</span>
+                                <span class="weather-unit">°F</span>
+                            </div>
                         </div>
-                        <div class="weather-condition">${current.condition.text}</div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px; margin-top: 8px;">
+                            <div>
+                                <div style="color: #70757a;">Visibility</div>
+                                <div style="font-weight: 600; color: #202124;">${current.vis_miles} mi</div>
+                            </div>
+                            <div>
+                                <div style="color: #70757a;">Pressure</div>
+                                <div style="font-weight: 600; color: #202124;">${current.pressure_in} in</div>
+                            </div>
+                            <div>
+                                <div style="color: #70757a;">Humidity</div>
+                                <div style="font-weight: 600; color: #202124;">${current.humidity}%</div>
+                            </div>
+                            <div>
+                                <div style="color: #70757a;">UV Index</div>
+                                <div style="font-weight: 600; color: #202124;">${current.uv}</div>
+                            </div>
+                        </div>
                     </div>
+                    
                     <div class="weather-rain-info">
                         <span>ℹ️</span>
                         <span>${rainDistance}</span>
@@ -828,35 +851,36 @@ function showWeatherWidget(data) {
             </button>
             
             <div class="weather-widget-full" id="weatherFull">
-                <div class="weather-forecast">
-                    ${forecast.map(day => `
-                        <div class="forecast-day">
-                            <div class="forecast-day-name">${new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}</div>
-                            <img src="https:${day.day.condition.icon}" alt="${day.day.condition.text}" class="forecast-icon" />
-                            <div class="forecast-temp">
-                                <span class="forecast-temp-high">${Math.round(day.day.maxtemp_f)}°</span>
-                                <span class="forecast-temp-low">${Math.round(day.day.mintemp_f)}°</span>
-                            </div>
-                        </div>
-                    `).join('')}
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #202124; margin-bottom: 12px;">Hourly Forecast</div>
+                    <div style="display: flex; gap: 16px; overflow-x: auto; padding: 12px 0;">
+                        ${hourly.filter((_, i) => i % 3 === 0).map(hour => {
+                            const time = new Date(hour.time).toLocaleTimeString('en-US', { hour: 'numeric' });
+                            return `
+                                <div style="text-align: center; min-width: 60px;">
+                                    <div style="font-size: 12px; color: #70757a; margin-bottom: 8px;">${time}</div>
+                                    <img src="https:${hour.condition.icon}" alt="${hour.condition.text}" style="width: 40px; height: 40px;" />
+                                    <div style="font-size: 16px; font-weight: 600; color: #202124; margin-top: 8px;">${Math.round(hour.temp_f)}°</div>
+                                    <div style="font-size: 11px; color: #70757a; margin-top: 4px;">${hour.chance_of_rain}%</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
                 </div>
                 
-                <div class="weather-details">
-                    <div class="weather-detail-item">
-                        <div class="weather-detail-label">Visibility</div>
-                        <div class="weather-detail-value">${current.vis_miles} mi</div>
-                    </div>
-                    <div class="weather-detail-item">
-                        <div class="weather-detail-label">Pressure</div>
-                        <div class="weather-detail-value">${current.pressure_in} in</div>
-                    </div>
-                    <div class="weather-detail-item">
-                        <div class="weather-detail-label">Humidity</div>
-                        <div class="weather-detail-value">${current.humidity}%</div>
-                    </div>
-                    <div class="weather-detail-item">
-                        <div class="weather-detail-label">UV Index</div>
-                        <div class="weather-detail-value">${current.uv}</div>
+                <div style="margin-top: 16px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #202124; margin-bottom: 12px;">3-Day Forecast</div>
+                    <div class="weather-forecast">
+                        ${forecast.map(day => `
+                            <div class="forecast-day">
+                                <div class="forecast-day-name">${new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                                <img src="https:${day.day.condition.icon}" alt="${day.day.condition.text}" class="forecast-icon" />
+                                <div class="forecast-temp">
+                                    <span class="forecast-temp-high">${Math.round(day.day.maxtemp_f)}°</span>
+                                    <span class="forecast-temp-low">${Math.round(day.day.mintemp_f)}°</span>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
                 
@@ -913,6 +937,38 @@ async function updateLocation() {
         showWeatherWidget(weatherData);
     }
 })();
+
+// Update handleSearch to include weather detection
+const originalHandleSearch = handleSearch;
+handleSearch = function() {
+    const q = input.value.trim();
+    if (!q) return;
+    
+    suggestionInput.value = '';
+    currentSuggestion = '';
+    
+    // Check if weather query
+    if (q.toLowerCase() === 'weather' || q.toLowerCase().startsWith('weather in ')) {
+        const location = q.toLowerCase().startsWith('weather in ') ? q.slice(11).trim() : savedLocation;
+        fetchWeather(location).then(data => {
+            if (data) {
+                savedLocation = location;
+                localStorage.setItem('weatherLocation', location);
+                showWeatherWidget(data);
+                resultsDiv.innerHTML = '';
+            }
+        });
+        return;
+    }
+    
+    const navUrl = checkNavigation(q);
+    if (navUrl) {
+        window.location.href = navUrl;
+        return;
+    }
+    
+    search(q);
+};
 
 
 </script>
