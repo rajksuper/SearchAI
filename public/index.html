@@ -1633,19 +1633,42 @@ wikiTrigger.addEventListener('click', function() {
 // Wikipedia Functions
 async function searchWikipedia(query) {
     try {
-        const response = await fetch(
+        // First get search results
+        const searchResponse = await fetch(
             `https://en.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=5&format=json&origin=*`
         );
-        const data = await response.json();
+        const searchData = await searchResponse.json();
         
-        // Format: [query, [titles], [summaries], [urls]]
+        if (searchData[1].length === 0) return [];
+        
+        // Get page extracts for better summaries
+        const titles = searchData[1].join('|');
+        const extractResponse = await fetch(
+            `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=1&explaintext=1&titles=${encodeURIComponent(titles)}&origin=*`
+        );
+        const extractData = await extractResponse.json();
+        
         const results = [];
-        for (let i = 0; i < data[1].length; i++) {
-            results.push({
-                title: data[1][i],
-                summary: data[2][i],
-                url: data[3][i]
-            });
+        const pages = extractData.query.pages;
+        
+        for (let i = 0; i < searchData[1].length; i++) {
+            const title = searchData[1][i];
+            const url = searchData[3][i];
+            
+            // Find matching page extract
+            let summary = searchData[2][i] || '';
+            for (let pageId in pages) {
+                if (pages[pageId].title === title && pages[pageId].extract) {
+                    summary = pages[pageId].extract;
+                    // Limit to ~300 characters
+                    if (summary.length > 300) {
+                        summary = summary.substring(0, 300) + '...';
+                    }
+                    break;
+                }
+            }
+            
+            results.push({ title, summary, url });
         }
         
         return results;
