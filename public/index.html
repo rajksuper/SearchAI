@@ -84,6 +84,39 @@ body {
     z-index: 1;
 }
 
+/* Weather Trigger Icon */
+.weather-trigger {
+    text-align: center;
+    margin: 16px auto 20px;
+    cursor: pointer;
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: all 0.2s;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.weather-trigger:hover {
+    background: #f8f9fa;
+}
+
+.weather-icon-btn {
+    font-size: 24px;
+    margin-right: 6px;
+}
+
+.weather-trigger-text {
+    font-size: 14px;
+    color: #5f6368;
+    font-weight: 500;
+}
+
+.weather-trigger.hidden {
+    display: none;
+}
+
 /* Shortcuts */
 .shortcuts-section {
     margin: 30px 0;
@@ -515,6 +548,15 @@ body {
         background: #3c4043;
     }
     
+    /* Weather trigger dark mode */
+    .weather-trigger:hover {
+        background: #3c4043;
+    }
+    
+    .weather-trigger-text {
+        color: #9aa0a6;
+    }
+    
     /* Mobile-specific weather detail colors */
     .weather-widget div[style*="color: #70757a"] {
         color: #9aa0a6 !important;
@@ -568,6 +610,12 @@ body {
         <input id="searchInput" class="search-box" type="text" placeholder="Search anything..." autocomplete="off" autofocus />
     </div>
     
+    <!-- Weather Icon Trigger -->
+    <div id="weatherTrigger" class="weather-trigger">
+        <span class="weather-icon-btn">⛅</span>
+        <span class="weather-trigger-text">Get Weather</span>
+    </div>
+    
     <!-- Weather Widget -->
     <div id="weatherWidget" style="display: none;"></div>
     
@@ -585,6 +633,7 @@ const resultsDiv = document.getElementById("results");
 const shortcutsSection = document.getElementById("shortcutsSection");
 const shortcutsGrid = document.getElementById("shortcutsGrid");
 const weatherWidget = document.getElementById("weatherWidget");
+const weatherTrigger = document.getElementById("weatherTrigger");
 
 let shortcuts = [];
 let navigationRouter = {};
@@ -595,6 +644,7 @@ const WEATHER_API_KEY = '398b15f1e90c45738c260159260101';
 let savedLocation = localStorage.getItem('weatherLocation') || 'auto:ip';
 let weatherExpanded = false;
 let selectedDay = 0;
+let weatherLoaded = false;
 
 fetch('/shortcuts.json')
     .then(res => res.json())
@@ -608,6 +658,19 @@ fetch('/navigation-router.json')
     .then(data => {
         navigationRouter = data;
     });
+
+// Weather icon click handler
+weatherTrigger.addEventListener('click', async function() {
+    if (!weatherLoaded) {
+        const weatherData = await fetchWeather();
+        if (weatherData) {
+            window.currentWeatherData = weatherData;
+            showWeatherWidget(weatherData);
+            weatherLoaded = true;
+            weatherTrigger.classList.add('hidden');
+        }
+    }
+});
 
 function renderShortcuts() {
     shortcutsGrid.innerHTML = '';
@@ -793,15 +856,6 @@ async function updateLocation() {
         }
     }
 }
-
-// Load weather on page load
-(async function() {
-    const weatherData = await fetchWeather();
-    if (weatherData) {
-        window.currentWeatherData = weatherData;
-        showWeatherWidget(weatherData);
-    }
-})();
 
 // Autocomplete
 function findSuggestion(query) {
