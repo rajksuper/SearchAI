@@ -84,37 +84,168 @@ body {
     z-index: 1;
 }
 
-/* Weather Trigger Icon */
-.weather-trigger {
-    text-align: center;
-    margin: 16px auto 20px;
-    cursor: pointer;
-    display: inline-block;
-    padding: 8px 16px;
-    border-radius: 20px;
-    transition: all 0.2s;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
+/* Widget Triggers */
+.widget-triggers {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px auto;
 }
 
-.weather-trigger:hover {
+.widget-icon {
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    position: relative;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: #f8f9fa;
 }
 
-.weather-icon-btn {
-    font-size: 24px;
-    margin-right: 6px;
+.widget-icon:hover {
+    background: #e8eaed;
+    transform: scale(1.1);
 }
 
-.weather-trigger-text {
-    font-size: 14px;
-    color: #5f6368;
-    font-weight: 500;
+.icon-emoji {
+    font-size: 28px;
 }
 
-.weather-trigger.hidden {
+.widget-icon.hidden {
     display: none;
+}
+
+/* Tooltip */
+.widget-icon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #202124;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.widget-icon:hover::after {
+    opacity: 1;
+}
+
+/* Calculator Widget */
+.calculator-widget {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+    max-width: 400px;
+    margin: 20px auto;
+}
+
+.calculator-display {
+    background: #f8f9fa;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 24px;
+    font-weight: 300;
+    text-align: right;
+    margin-bottom: 16px;
+    color: #202124;
+    min-height: 60px;
+    word-wrap: break-word;
+}
+
+.calculator-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    outline: none;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+}
+
+.calculator-input:focus {
+    border-color: #1a73e8;
+}
+
+.calculator-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.calc-btn {
+    padding: 16px;
+    font-size: 18px;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    background: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: arial, sans-serif;
+}
+
+.calc-btn:hover {
+    background: #e8eaed;
+}
+
+.calc-btn:active {
+    transform: scale(0.95);
+}
+
+.calc-btn.operator {
+    background: #e8f0fe;
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+.calc-btn.equals {
+    background: #1a73e8;
+    color: white;
+    font-weight: 600;
+}
+
+.calc-btn.equals:hover {
+    background: #1967d2;
+}
+
+.calc-btn.clear {
+    background: #fce8e6;
+    color: #d93025;
+}
+
+.calc-btn.clear:hover {
+    background: #f5c8c6;
+}
+
+.calculator-close {
+    background: #f8f9fa;
+    border: 1px solid #dadce0;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 13px;
+    color: #202124;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 12px;
+    font-family: arial, sans-serif;
+}
+
+.calculator-close:hover {
+    background: #f1f3f4;
 }
 
 /* Shortcuts */
@@ -548,13 +679,73 @@ body {
         background: #3c4043;
     }
     
-    /* Weather trigger dark mode */
-    .weather-trigger:hover {
+    /* Widget icons dark mode */
+    .widget-icon {
         background: #3c4043;
     }
     
-    .weather-trigger-text {
+    .widget-icon:hover {
+        background: #5f6368;
+    }
+    
+    .widget-icon::after {
+        background: #5f6368;
+    }
+    
+    /* Calculator dark mode */
+    .calculator-widget {
+        background: #2d2d2d;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.3);
+    }
+    
+    .calculator-display {
+        background: #3c4043;
+        border-color: #5f6368;
+        color: #e8eaed;
+    }
+    
+    .calculator-input {
+        background: #3c4043;
+        border-color: #5f6368;
+        color: #e8eaed;
+    }
+    
+    .calculator-input::placeholder {
         color: #9aa0a6;
+    }
+    
+    .calc-btn {
+        background: #3c4043;
+        border-color: #5f6368;
+        color: #e8eaed;
+    }
+    
+    .calc-btn:hover {
+        background: #5f6368;
+    }
+    
+    .calc-btn.operator {
+        background: #1e3a5f;
+        color: #8ab4f8;
+    }
+    
+    .calc-btn.equals {
+        background: #1a73e8;
+    }
+    
+    .calc-btn.clear {
+        background: #5f2120;
+        color: #f28b82;
+    }
+    
+    .calculator-close {
+        background: #3c4043;
+        border-color: #5f6368;
+        color: #e8eaed;
+    }
+    
+    .calculator-close:hover {
+        background: #5f6368;
     }
     
     /* Mobile-specific weather detail colors */
@@ -610,14 +801,21 @@ body {
         <input id="searchInput" class="search-box" type="text" placeholder="Search anything..." autocomplete="off" autofocus />
     </div>
     
-    <!-- Weather Icon Trigger -->
-    <div id="weatherTrigger" class="weather-trigger">
-        <span class="weather-icon-btn">⛅</span>
-        <span class="weather-trigger-text">Get Weather</span>
+    <!-- Widget Triggers -->
+    <div class="widget-triggers">
+        <div class="widget-icon" id="weatherTrigger" data-tooltip="Weather">
+            <span class="icon-emoji">⛅</span>
+        </div>
+        <div class="widget-icon" id="calculatorTrigger" data-tooltip="Calculator">
+            <span class="icon-emoji">🔢</span>
+        </div>
     </div>
     
     <!-- Weather Widget -->
     <div id="weatherWidget" style="display: none;"></div>
+    
+    <!-- Calculator Widget -->
+    <div id="calculatorWidget" style="display: none;"></div>
     
     <div class="shortcuts-section" id="shortcutsSection">
         <div class="shortcuts-grid" id="shortcutsGrid"></div>
@@ -634,6 +832,8 @@ const shortcutsSection = document.getElementById("shortcutsSection");
 const shortcutsGrid = document.getElementById("shortcutsGrid");
 const weatherWidget = document.getElementById("weatherWidget");
 const weatherTrigger = document.getElementById("weatherTrigger");
+const calculatorWidget = document.getElementById("calculatorWidget");
+const calculatorTrigger = document.getElementById("calculatorTrigger");
 
 let shortcuts = [];
 let navigationRouter = {};
@@ -645,6 +845,10 @@ let savedLocation = localStorage.getItem('weatherLocation') || 'auto:ip';
 let weatherExpanded = false;
 let selectedDay = 0;
 let weatherLoaded = false;
+
+// Calculator state
+let calculatorLoaded = false;
+let calcDisplay = '';
 
 fetch('/shortcuts.json')
     .then(res => res.json())
@@ -662,15 +866,128 @@ fetch('/navigation-router.json')
 // Weather icon click handler
 weatherTrigger.addEventListener('click', async function() {
     if (!weatherLoaded) {
+        calculatorWidget.style.display = 'none';
         const weatherData = await fetchWeather();
         if (weatherData) {
             window.currentWeatherData = weatherData;
             showWeatherWidget(weatherData);
             weatherLoaded = true;
-            weatherTrigger.classList.add('hidden');
         }
+    } else {
+        calculatorWidget.style.display = 'none';
+        weatherWidget.style.display = 'block';
     }
 });
+
+// Calculator icon click handler
+calculatorTrigger.addEventListener('click', function() {
+    if (!calculatorLoaded) {
+        weatherWidget.style.display = 'none';
+        showCalculator();
+        calculatorLoaded = true;
+    } else {
+        weatherWidget.style.display = 'none';
+        calculatorWidget.style.display = 'block';
+    }
+});
+
+// Calculator Functions
+function showCalculator() {
+    calculatorWidget.innerHTML = `
+        <div class="calculator-widget">
+            <div class="calculator-display" id="calcDisplay">0</div>
+            <input type="text" id="calcInput" class="calculator-input" placeholder="Type expression (e.g., 2+2, sqrt(16))" />
+            <div class="calculator-buttons">
+                <button class="calc-btn" onclick="calcAppend('7')">7</button>
+                <button class="calc-btn" onclick="calcAppend('8')">8</button>
+                <button class="calc-btn" onclick="calcAppend('9')">9</button>
+                <button class="calc-btn operator" onclick="calcAppend('/')">/</button>
+                <button class="calc-btn" onclick="calcAppend('4')">4</button>
+                <button class="calc-btn" onclick="calcAppend('5')">5</button>
+                <button class="calc-btn" onclick="calcAppend('6')">6</button>
+                <button class="calc-btn operator" onclick="calcAppend('*')">×</button>
+                <button class="calc-btn" onclick="calcAppend('1')">1</button>
+                <button class="calc-btn" onclick="calcAppend('2')">2</button>
+                <button class="calc-btn" onclick="calcAppend('3')">3</button>
+                <button class="calc-btn operator" onclick="calcAppend('-')">-</button>
+                <button class="calc-btn" onclick="calcAppend('0')">0</button>
+                <button class="calc-btn" onclick="calcAppend('.')">.</button>
+                <button class="calc-btn equals" onclick="calcEquals()">=</button>
+                <button class="calc-btn operator" onclick="calcAppend('+')">+</button>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px;">
+                <button class="calc-btn clear" onclick="calcClear()">C</button>
+                <button class="calc-btn" onclick="calcAppend('(')">(</button>
+                <button class="calc-btn" onclick="calcAppend(')')">)</button>
+                <button class="calc-btn operator" onclick="calcAppend('^')">^</button>
+            </div>
+            <button class="calculator-close" onclick="closeCalculator()">Close Calculator</button>
+        </div>
+    `;
+    
+    calculatorWidget.style.display = 'block';
+    shortcutsSection.style.display = 'none';
+    
+    const calcInput = document.getElementById('calcInput');
+    calcInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            calcEquals();
+        }
+    });
+    
+    calcInput.addEventListener('input', function() {
+        calcDisplay = this.value;
+        updateCalcDisplay();
+    });
+}
+
+function calcAppend(value) {
+    const calcInput = document.getElementById('calcInput');
+    calcInput.value += value;
+    calcDisplay = calcInput.value;
+    updateCalcDisplay();
+}
+
+function calcClear() {
+    const calcInput = document.getElementById('calcInput');
+    calcInput.value = '';
+    calcDisplay = '0';
+    updateCalcDisplay();
+}
+
+function updateCalcDisplay() {
+    const display = document.getElementById('calcDisplay');
+    display.textContent = calcDisplay || '0';
+}
+
+function calcEquals() {
+    const calcInput = document.getElementById('calcInput');
+    let expression = calcInput.value;
+    
+    try {
+        // Support common math functions
+        expression = expression.replace(/sqrt\(([^)]+)\)/g, 'Math.sqrt($1)');
+        expression = expression.replace(/sin\(([^)]+)\)/g, 'Math.sin($1*Math.PI/180)');
+        expression = expression.replace(/cos\(([^)]+)\)/g, 'Math.cos($1*Math.PI/180)');
+        expression = expression.replace(/tan\(([^)]+)\)/g, 'Math.tan($1*Math.PI/180)');
+        expression = expression.replace(/log\(([^)]+)\)/g, 'Math.log10($1)');
+        expression = expression.replace(/ln\(([^)]+)\)/g, 'Math.log($1)');
+        expression = expression.replace(/\^/g, '**');
+        
+        const result = eval(expression);
+        calcDisplay = result.toString();
+        calcInput.value = calcDisplay;
+        updateCalcDisplay();
+    } catch (error) {
+        calcDisplay = 'Error';
+        updateCalcDisplay();
+    }
+}
+
+function closeCalculator() {
+    calculatorWidget.style.display = 'none';
+    shortcutsSection.style.display = 'block';
+}
 
 function renderShortcuts() {
     shortcutsGrid.innerHTML = '';
