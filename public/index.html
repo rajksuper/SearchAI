@@ -248,6 +248,142 @@ body {
     background: #f1f3f4;
 }
 
+/* Sports Widget */
+.sports-widget {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.sports-header {
+    font-size: 18px;
+    font-weight: 600;
+    color: #202124;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sports-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+}
+
+.sport-tab {
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: #f8f9fa;
+    border: 1px solid #dadce0;
+    cursor: pointer;
+    font-size: 14px;
+    color: #5f6368;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.sport-tab:hover {
+    background: #e8eaed;
+}
+
+.sport-tab.active {
+    background: #1a73e8;
+    color: white;
+    border-color: #1a73e8;
+}
+
+.sports-games {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.game-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.game-team {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.team-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+}
+
+.team-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: #202124;
+}
+
+.game-score {
+    font-size: 20px;
+    font-weight: 600;
+    color: #202124;
+    min-width: 40px;
+    text-align: center;
+}
+
+.game-status {
+    font-size: 12px;
+    color: #5f6368;
+    text-align: center;
+    margin-top: 4px;
+}
+
+.game-live {
+    color: #d93025;
+    font-weight: 600;
+}
+
+.game-live::before {
+    content: "● ";
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.sports-loading {
+    text-align: center;
+    padding: 40px;
+    color: #5f6368;
+}
+
+.sports-close {
+    background: #f8f9fa;
+    border: 1px solid #dadce0;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 13px;
+    color: #202124;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 12px;
+    font-family: arial, sans-serif;
+}
+
+.sports-close:hover {
+    background: #f1f3f4;
+}
+
 /* Shortcuts */
 .shortcuts-section {
     margin: 30px 0;
@@ -748,6 +884,62 @@ body {
         background: #5f6368;
     }
     
+    /* Sports widget dark mode */
+    .sports-widget {
+        background: #2d2d2d;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.3);
+    }
+    
+    .sports-header {
+        color: #e8eaed;
+    }
+    
+    .sport-tab {
+        background: #3c4043;
+        border-color: #5f6368;
+        color: #9aa0a6;
+    }
+    
+    .sport-tab:hover {
+        background: #5f6368;
+    }
+    
+    .sport-tab.active {
+        background: #1a73e8;
+        color: white;
+    }
+    
+    .game-card {
+        background: #3c4043;
+    }
+    
+    .team-name,
+    .game-score {
+        color: #e8eaed;
+    }
+    
+    .game-status {
+        color: #9aa0a6;
+    }
+    
+    .game-live {
+        color: #f28b82;
+    }
+    
+    .sports-loading {
+        color: #9aa0a6;
+    }
+    
+    .sports-close {
+        background: #3c4043;
+        border-color: #5f6368;
+        color: #e8eaed;
+    }
+    
+    .sports-close:hover {
+        background: #5f6368;
+    }
+    
     /* Mobile-specific weather detail colors */
     .weather-widget div[style*="color: #70757a"] {
         color: #9aa0a6 !important;
@@ -809,6 +1001,9 @@ body {
         <div class="widget-icon" id="calculatorTrigger" data-tooltip="Calculator">
             <span class="icon-emoji">🔢</span>
         </div>
+        <div class="widget-icon" id="sportsTrigger" data-tooltip="Sports Scores">
+            <span class="icon-emoji">🏀</span>
+        </div>
     </div>
     
     <!-- Weather Widget -->
@@ -816,6 +1011,9 @@ body {
     
     <!-- Calculator Widget -->
     <div id="calculatorWidget" style="display: none;"></div>
+    
+    <!-- Sports Widget -->
+    <div id="sportsWidget" style="display: none;"></div>
     
     <div class="shortcuts-section" id="shortcutsSection">
         <div class="shortcuts-grid" id="shortcutsGrid"></div>
@@ -834,6 +1032,8 @@ const weatherWidget = document.getElementById("weatherWidget");
 const weatherTrigger = document.getElementById("weatherTrigger");
 const calculatorWidget = document.getElementById("calculatorWidget");
 const calculatorTrigger = document.getElementById("calculatorTrigger");
+const sportsWidget = document.getElementById("sportsWidget");
+const sportsTrigger = document.getElementById("sportsTrigger");
 
 let shortcuts = [];
 let navigationRouter = {};
@@ -850,6 +1050,10 @@ let weatherLoaded = false;
 let calculatorLoaded = false;
 let calcDisplay = '';
 
+// Sports state
+let sportsLoaded = false;
+let currentSport = 'nfl';
+
 fetch('/shortcuts.json')
     .then(res => res.json())
     .then(data => {
@@ -865,8 +1069,10 @@ fetch('/navigation-router.json')
 
 // Weather icon click handler
 weatherTrigger.addEventListener('click', async function() {
+    calculatorWidget.style.display = 'none';
+    sportsWidget.style.display = 'none';
+    
     if (!weatherLoaded) {
-        calculatorWidget.style.display = 'none';
         const weatherData = await fetchWeather();
         if (weatherData) {
             window.currentWeatherData = weatherData;
@@ -874,22 +1080,139 @@ weatherTrigger.addEventListener('click', async function() {
             weatherLoaded = true;
         }
     } else {
-        calculatorWidget.style.display = 'none';
         weatherWidget.style.display = 'block';
     }
 });
 
 // Calculator icon click handler
 calculatorTrigger.addEventListener('click', function() {
+    weatherWidget.style.display = 'none';
+    sportsWidget.style.display = 'none';
+    
     if (!calculatorLoaded) {
-        weatherWidget.style.display = 'none';
         showCalculator();
         calculatorLoaded = true;
     } else {
-        weatherWidget.style.display = 'none';
         calculatorWidget.style.display = 'block';
     }
 });
+
+// Sports icon click handler
+sportsTrigger.addEventListener('click', async function() {
+    weatherWidget.style.display = 'none';
+    calculatorWidget.style.display = 'none';
+    
+    if (!sportsLoaded) {
+        await showSports();
+        sportsLoaded = true;
+    } else {
+        sportsWidget.style.display = 'block';
+    }
+});
+
+// Sports Functions
+async function fetchSportsScores(sport) {
+    const endpoints = {
+        'nfl': 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard',
+        'nba': 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard',
+        'mlb': 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard',
+        'nhl': 'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard',
+        'soccer': 'https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard'
+    };
+    
+    try {
+        const response = await fetch(endpoints[sport]);
+        const data = await response.json();
+        return data.events || [];
+    } catch (error) {
+        console.error('Sports fetch error:', error);
+        return [];
+    }
+}
+
+async function showSports() {
+    sportsWidget.innerHTML = `
+        <div class="sports-widget">
+            <div class="sports-header">
+                <span>🏀</span>
+                <span>Live Sports Scores</span>
+            </div>
+            <div class="sports-tabs">
+                <button class="sport-tab active" onclick="switchSport('nfl')">🏈 NFL</button>
+                <button class="sport-tab" onclick="switchSport('nba')">🏀 NBA</button>
+                <button class="sport-tab" onclick="switchSport('mlb')">⚾ MLB</button>
+                <button class="sport-tab" onclick="switchSport('nhl')">🏒 NHL</button>
+                <button class="sport-tab" onclick="switchSport('soccer')">⚽ Soccer</button>
+            </div>
+            <div class="sports-games" id="sportsGames">
+                <div class="sports-loading">Loading scores...</div>
+            </div>
+            <button class="sports-close" onclick="closeSports()">Close</button>
+        </div>
+    `;
+    
+    sportsWidget.style.display = 'block';
+    shortcutsSection.style.display = 'none';
+    
+    await loadSportGames('nfl');
+}
+
+async function switchSport(sport) {
+    currentSport = sport;
+    
+    // Update active tab
+    document.querySelectorAll('.sport-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    await loadSportGames(sport);
+}
+
+async function loadSportGames(sport) {
+    const gamesContainer = document.getElementById('sportsGames');
+    gamesContainer.innerHTML = '<div class="sports-loading">Loading scores...</div>';
+    
+    const games = await fetchSportsScores(sport);
+    
+    if (games.length === 0) {
+        gamesContainer.innerHTML = '<div class="sports-loading">No games today</div>';
+        return;
+    }
+    
+    gamesContainer.innerHTML = games.map(game => {
+        const competition = game.competitions[0];
+        const homeTeam = competition.competitors.find(t => t.homeAway === 'home');
+        const awayTeam = competition.competitors.find(t => t.homeAway === 'away');
+        const status = competition.status;
+        
+        const isLive = status.type.state === 'in';
+        const statusText = isLive ? `${status.type.shortDetail}` : status.type.shortDetail;
+        
+        return `
+            <div class="game-card">
+                <div style="flex: 1;">
+                    <div class="game-team">
+                        <div class="team-name">${awayTeam.team.shortDisplayName}</div>
+                        <div class="game-score">${awayTeam.score || '0'}</div>
+                    </div>
+                    <div class="game-team" style="margin-top: 8px;">
+                        <div class="team-name">${homeTeam.team.shortDisplayName}</div>
+                        <div class="game-score">${homeTeam.score || '0'}</div>
+                    </div>
+                </div>
+                <div style="text-align: right; min-width: 80px;">
+                    <div class="game-status ${isLive ? 'game-live' : ''}">${statusText}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function closeSports() {
+    sportsWidget.style.display = 'none';
+    shortcutsSection.style.display = 'block';
+}
 
 // Calculator Functions
 function showCalculator() {
