@@ -40,7 +40,7 @@ body {
 .search-box {
     width: 100%;
     max-width: 584px;
-    padding: 13px 16px;
+    padding: 13px 80px 13px 16px;
     font-size: 16px;
     border: 1px solid #dfe1e5;
     border-radius: 24px;
@@ -61,6 +61,43 @@ body {
 .search-box:focus {
     border-color: transparent;
     box-shadow: 0 1px 6px rgba(32,33,36,.28);
+}
+
+.search-clear-btn {
+    position: absolute;
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #70757a;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 3;
+    transition: all 0.2s;
+}
+
+.search-clear-btn:hover {
+    color: #202124;
+}
+
+.search-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px 12px;
+    z-index: 3;
+    transition: all 0.2s;
+}
+
+.search-btn:hover {
+    transform: translateY(-50%) scale(1.1);
 }
 
 .search-wrapper {
@@ -139,6 +176,26 @@ body {
 
 .widget-icon:hover::after {
     opacity: 1;
+}
+
+/* Widget Close Button (Top Right X) */
+.widget-close-x {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #5f6368;
+    cursor: pointer;
+    padding: 4px 8px;
+    z-index: 10;
+    transition: all 0.2s;
+}
+
+.widget-close-x:hover {
+    color: #202124;
+    transform: scale(1.1);
 }
 
 /* Calculator Widget */
@@ -1046,8 +1103,44 @@ body {
         color: #9aa0a6;
     }
     
+    .search-clear-btn {
+        color: #9aa0a6;
+    }
+    
+    .search-clear-btn:hover {
+        color: #e8eaed;
+    }
+    
+    .search-btn {
+        color: #9aa0a6;
+    }
+    
     .search-suggestion {
         color: #5f6368;
+    }
+    
+    /* Smaller widget icons on mobile */
+    .widget-icon {
+        width: 36px !important;
+        height: 36px !important;
+        padding: 6px !important;
+    }
+    
+    .icon-emoji {
+        font-size: 20px !important;
+    }
+    
+    .widget-triggers {
+        gap: 12px !important;
+    }
+    
+    /* Widget close button dark mode */
+    .widget-close-x {
+        color: #9aa0a6;
+    }
+    
+    .widget-close-x:hover {
+        color: #e8eaed;
     }
     
     .result {
@@ -1450,13 +1543,15 @@ body {
 
 <div class="container">
     <div class="header">
-        <div class="logo">Search AI</div>
+        <div class="logo" onclick="goHome()" style="cursor: pointer;">Search AI</div>
         <div class="tagline">Fast. Clean. No spam.</div>
     </div>
     
     <div class="search-wrapper">
         <input id="searchSuggestion" class="search-suggestion" type="text" disabled />
         <input id="searchInput" class="search-box" type="text" placeholder="Search anything..." autocomplete="off" autofocus />
+        <button id="searchClearBtn" class="search-clear-btn" onclick="clearMainSearch()" style="display: none;">✕</button>
+        <button id="searchBtn" class="search-btn" onclick="performMainSearch()">🔍</button>
     </div>
     
     <!-- Widget Triggers -->
@@ -1512,6 +1607,11 @@ const calculatorWidget = document.getElementById("calculatorWidget");
 const calculatorTrigger = document.getElementById("calculatorTrigger");
 const sportsWidget = document.getElementById("sportsWidget");
 const sportsTrigger = document.getElementById("sportsTrigger");
+const clockWidget = document.getElementById("clockWidget");
+const clockTrigger = document.getElementById("clockTrigger");
+const wikiWidget = document.getElementById("wikiWidget");
+const wikiTrigger = document.getElementById("wikiTrigger");
+const searchClearBtn = document.getElementById("searchClearBtn");
 
 let shortcuts = [];
 let navigationRouter = {};
@@ -1541,6 +1641,15 @@ let citiesData = null;
 // Wiki state
 let wikiLoaded = false;
 
+// Widget open states
+let widgetStates = {
+    weather: false,
+    calculator: false,
+    sports: false,
+    clock: false,
+    wiki: false
+};
+
 fetch('/shortcuts.json')
     .then(res => res.json())
     .then(data => {
@@ -1554,79 +1663,190 @@ fetch('/navigation-router.json')
         navigationRouter = data;
     });
 
-// Weather icon click handler
-weatherTrigger.addEventListener('click', async function() {
+// Utility Functions
+function goHome() {
+    closeAllWidgets();
+    input.value = '';
+    searchClearBtn.style.display = 'none';
+    suggestionInput.value = '';
+    resultsDiv.innerHTML = '';
+    shortcutsSection.style.display = 'block';
+}
+
+function closeAllWidgets() {
+    weatherWidget.style.display = 'none';
     calculatorWidget.style.display = 'none';
     sportsWidget.style.display = 'none';
+    clockWidget.style.display = 'none';
+    wikiWidget.style.display = 'none';
+    stopClockUpdates();
     
-    if (!weatherLoaded) {
-        const weatherData = await fetchWeather();
-        if (weatherData) {
-            window.currentWeatherData = weatherData;
-            showWeatherWidget(weatherData);
-            weatherLoaded = true;
-        }
+    widgetStates.weather = false;
+    widgetStates.calculator = false;
+    widgetStates.sports = false;
+    widgetStates.clock = false;
+    widgetStates.wiki = false;
+}
+
+function closeWidget(widgetName) {
+    switch(widgetName) {
+        case 'weather':
+            weatherWidget.style.display = 'none';
+            widgetStates.weather = false;
+            break;
+        case 'calculator':
+            calculatorWidget.style.display = 'none';
+            widgetStates.calculator = false;
+            break;
+        case 'sports':
+            sportsWidget.style.display = 'none';
+            widgetStates.sports = false;
+            break;
+        case 'clock':
+            clockWidget.style.display = 'none';
+            stopClockUpdates();
+            widgetStates.clock = false;
+            break;
+        case 'wiki':
+            wikiWidget.style.display = 'none';
+            widgetStates.wiki = false;
+            break;
+    }
+    shortcutsSection.style.display = 'block';
+}
+
+function clearMainSearch() {
+    input.value = '';
+    searchClearBtn.style.display = 'none';
+    suggestionInput.value = '';
+    input.focus();
+}
+
+function performMainSearch() {
+    const query = input.value.trim();
+    if (query) {
+        closeAllWidgets();
+        handleSearch(query);
+    }
+}
+
+// Show/hide clear button
+input.addEventListener('input', function() {
+    if (this.value.trim()) {
+        searchClearBtn.style.display = 'inline-block';
     } else {
-        weatherWidget.style.display = 'block';
+        searchClearBtn.style.display = 'none';
+    }
+});
+
+// Weather icon click handler
+weatherTrigger.addEventListener('click', async function() {
+    if (widgetStates.weather) {
+        // Already open, close it
+        weatherWidget.style.display = 'none';
+        widgetStates.weather = false;
+    } else {
+        // Close all others and open weather
+        closeAllWidgets();
+        
+        if (!weatherLoaded) {
+            const weatherData = await fetchWeather();
+            if (weatherData) {
+                window.currentWeatherData = weatherData;
+                showWeatherWidget(weatherData);
+                weatherLoaded = true;
+            }
+        } else {
+            weatherWidget.style.display = 'block';
+        }
+        widgetStates.weather = true;
     }
 });
 
 // Calculator icon click handler
 calculatorTrigger.addEventListener('click', function() {
-    weatherWidget.style.display = 'none';
-    sportsWidget.style.display = 'none';
-    
-    if (!calculatorLoaded) {
-        showCalculator();
-        calculatorLoaded = true;
+    if (widgetStates.calculator) {
+        // Already open, close it
+        calculatorWidget.style.display = 'none';
+        widgetStates.calculator = false;
     } else {
-        calculatorWidget.style.display = 'block';
+        // Close all others and open calculator
+        closeAllWidgets();
+        
+        if (!calculatorLoaded) {
+            showCalculator();
+            calculatorLoaded = true;
+        } else {
+            calculatorWidget.style.display = 'block';
+        }
+        widgetStates.calculator = true;
     }
 });
 
 // Sports icon click handler
 sportsTrigger.addEventListener('click', async function() {
-    weatherWidget.style.display = 'none';
-    calculatorWidget.style.display = 'none';
-    clockWidget.style.display = 'none';
-    
-    if (!sportsLoaded) {
-        await showSports();
-        sportsLoaded = true;
+    if (widgetStates.sports) {
+        sportsWidget.style.display = 'none';
+        widgetStates.sports = false;
     } else {
-        sportsWidget.style.display = 'block';
+        closeAllWidgets();
+        if (!sportsLoaded) {
+            await showSports();
+            sportsLoaded = true;
+        } else {
+            sportsWidget.style.display = 'block';
+        }
+        widgetStates.sports = true;
     }
 });
 
 // World Clock icon click handler
 clockTrigger.addEventListener('click', async function() {
-    weatherWidget.style.display = 'none';
-    calculatorWidget.style.display = 'none';
-    sportsWidget.style.display = 'none';
-    wikiWidget.style.display = 'none';
-    
-    if (!clockLoaded) {
-        await showWorldClock();
-        clockLoaded = true;
+    if (widgetStates.clock) {
+        clockWidget.style.display = 'none';
+        stopClockUpdates();
+        widgetStates.clock = false;
     } else {
-        clockWidget.style.display = 'block';
-        startClockUpdates();
+        closeAllWidgets();
+        if (!clockLoaded) {
+            await showWorldClock();
+            clockLoaded = true;
+        } else {
+            clockWidget.style.display = 'block';
+            startClockUpdates();
+        }
+        widgetStates.clock = true;
     }
 });
 
 // Wiki icon click handler
 wikiTrigger.addEventListener('click', function() {
-    weatherWidget.style.display = 'none';
-    calculatorWidget.style.display = 'none';
-    sportsWidget.style.display = 'none';
-    clockWidget.style.display = 'none';
-    stopClockUpdates();
-    
-    if (!wikiLoaded) {
-        showWikiSearch();
-        wikiLoaded = true;
+    if (widgetStates.wiki) {
+        wikiWidget.style.display = 'none';
+        widgetStates.wiki = false;
     } else {
-        wikiWidget.style.display = 'block';
+        closeAllWidgets();
+        
+        // Copy main search text to wiki search
+        const mainSearchText = input.value.trim();
+        
+        if (!wikiLoaded) {
+            showWikiSearch();
+            wikiLoaded = true;
+        } else {
+            wikiWidget.style.display = 'block';
+        }
+        
+        // Set wiki search text and auto-search if exists
+        if (mainSearchText) {
+            const wikiSearchInput = document.getElementById('wikiSearchInput');
+            if (wikiSearchInput) {
+                wikiSearchInput.value = mainSearchText;
+                performWikiSearch();
+            }
+        }
+        
+        widgetStates.wiki = true;
     }
 });
 
@@ -1681,14 +1901,16 @@ async function searchWikipedia(query) {
 function showWikiSearch() {
     wikiWidget.innerHTML = `
         <div class="wiki-widget">
+            <button class="widget-close-x" onclick="closeWidget('wiki')">✕</button>
             <div class="wiki-header">
                 <span>📚</span>
                 <span>Wiki Search</span>
             </div>
             <div class="wiki-subheader">Powered by Wikipedia</div>
             
-            <div class="wiki-search-box">
-                <input type="text" class="wiki-search-input" id="wikiSearchInput" placeholder="Search Wikipedia..." autocomplete="off" />
+            <div class="wiki-search-box" style="position: relative;">
+                <input type="text" class="wiki-search-input" id="wikiSearchInput" placeholder="Search Wikipedia..." autocomplete="off" style="padding-right: 100px;" />
+                <button class="search-clear-btn" id="wikiSearchClearBtn" onclick="clearWikiSearch()" style="display: none; right: 80px;">✕</button>
                 <button class="wiki-search-btn" onclick="performWikiSearch()">Search</button>
             </div>
             
@@ -1700,23 +1922,41 @@ function showWikiSearch() {
                 Content from Wikipedia (CC BY-SA 4.0)<br>
                 Wikipedia® is a registered trademark of the Wikimedia Foundation
             </div>
-            
-            <button class="wiki-close" onclick="closeWiki()">Close</button>
         </div>
     `;
     
     wikiWidget.style.display = 'block';
     shortcutsSection.style.display = 'none';
     
-    // Setup enter key
+    // Setup enter key and clear button
     const searchInput = document.getElementById('wikiSearchInput');
+    const wikiClearBtn = document.getElementById('wikiSearchClearBtn');
+    
     searchInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             performWikiSearch();
         }
     });
     
+    searchInput.addEventListener('input', function() {
+        if (this.value.trim()) {
+            wikiClearBtn.style.display = 'inline-block';
+        } else {
+            wikiClearBtn.style.display = 'none';
+        }
+    });
+    
     searchInput.focus();
+}
+
+function clearWikiSearch() {
+    const wikiSearchInput = document.getElementById('wikiSearchInput');
+    const wikiClearBtn = document.getElementById('wikiSearchClearBtn');
+    if (wikiSearchInput) {
+        wikiSearchInput.value = '';
+        wikiClearBtn.style.display = 'none';
+        wikiSearchInput.focus();
+    }
 }
 
 async function performWikiSearch() {
@@ -1879,6 +2119,7 @@ async function showWorldClock() {
     
     clockWidget.innerHTML = `
         <div class="clock-widget">
+            <button class="widget-close-x" onclick="closeWidget('clock')">✕</button>
             <div class="clock-header">
                 <span>🕐</span>
                 <span>World Clock</span>
@@ -1889,7 +2130,6 @@ async function showWorldClock() {
                 <div class="clock-suggestions" id="clockSuggestions" style="display: none;"></div>
             </div>
             <div class="clock-list" id="clockList"></div>
-            <button class="clock-close" onclick="closeWorldClock()">Close</button>
         </div>
     `;
     
@@ -2057,6 +2297,7 @@ async function fetchSportsScores(sport) {
 async function showSports() {
     sportsWidget.innerHTML = `
         <div class="sports-widget">
+            <button class="widget-close-x" onclick="closeWidget('sports')">✕</button>
             <div class="sports-header">
                 <span>🏀</span>
                 <span>Live Sports Scores</span>
@@ -2071,7 +2312,6 @@ async function showSports() {
             <div class="sports-games" id="sportsGames">
                 <div class="sports-loading">Loading scores...</div>
             </div>
-            <button class="sports-close" onclick="closeSports()">Close</button>
         </div>
     `;
     
@@ -2142,6 +2382,7 @@ function closeSports() {
 function showCalculator() {
     calculatorWidget.innerHTML = `
         <div class="calculator-widget">
+            <button class="widget-close-x" onclick="closeWidget('calculator')">✕</button>
             <div class="calculator-display" id="calcDisplay">0</div>
             <input type="text" id="calcInput" class="calculator-input" placeholder="Type expression (e.g., 2+2, sqrt(16))" />
             <div class="calculator-buttons">
@@ -2168,7 +2409,6 @@ function showCalculator() {
                 <button class="calc-btn" onclick="calcAppend(')')">)</button>
                 <button class="calc-btn operator" onclick="calcAppend('^')">^</button>
             </div>
-            <button class="calculator-close" onclick="closeCalculator()">Close Calculator</button>
         </div>
     `;
     
@@ -2288,6 +2528,7 @@ function showWeatherWidget(data) {
     
     weatherWidget.innerHTML = `
         <div class="weather-widget">
+            <button class="widget-close-x" onclick="closeWidget('weather')">✕</button>
             <div class="weather-widget-small">
                 <div style="flex: 1;">
                     <div class="weather-location">
@@ -2495,6 +2736,9 @@ function handleSearch() {
     const q = input.value.trim();
     if (!q) return;
     
+    // Close all widgets when searching
+    closeAllWidgets();
+    
     suggestionInput.value = '';
     currentSuggestion = '';
     
@@ -2508,6 +2752,7 @@ function handleSearch() {
                 window.currentWeatherData = data;
                 showWeatherWidget(data);
                 resultsDiv.innerHTML = '';
+                widgetStates.weather = true;
             }
         });
         return;
