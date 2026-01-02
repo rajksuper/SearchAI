@@ -206,6 +206,7 @@ body {
     box-shadow: 0 1px 6px rgba(0,0,0,0.1);
     max-width: 400px;
     margin: 20px auto;
+    position: relative;
 }
 
 .calculator-display {
@@ -313,6 +314,7 @@ body {
     box-shadow: 0 1px 6px rgba(0,0,0,0.1);
     max-width: 500px;
     margin: 20px auto;
+    position: relative;
 }
 
 .sports-header {
@@ -449,6 +451,7 @@ body {
     box-shadow: 0 1px 6px rgba(0,0,0,0.1);
     max-width: 500px;
     margin: 20px auto;
+    position: relative;
 }
 
 .clock-header {
@@ -623,6 +626,7 @@ body {
     box-shadow: 0 1px 6px rgba(0,0,0,0.1);
     max-width: 600px;
     margin: 20px auto;
+    position: relative;
 }
 
 .wiki-header {
@@ -823,6 +827,7 @@ body {
     max-width: 584px;
     margin: 20px auto;
     transition: all 0.2s;
+    position: relative;
 }
 
 .weather-widget:hover {
@@ -1550,7 +1555,7 @@ body {
     <div class="search-wrapper">
         <input id="searchSuggestion" class="search-suggestion" type="text" disabled />
         <input id="searchInput" class="search-box" type="text" placeholder="Search anything..." autocomplete="off" autofocus />
-        <button id="searchClearBtn" class="search-clear-btn" onclick="clearMainSearch()" style="display: none;">✕</button>
+        <button id="searchClearBtn" class="search-clear-btn" onclick="clearMainSearch()">✕</button>
         <button id="searchBtn" class="search-btn" onclick="performMainSearch()">🔍</button>
     </div>
     
@@ -1667,7 +1672,6 @@ fetch('/navigation-router.json')
 function goHome() {
     closeAllWidgets();
     input.value = '';
-    searchClearBtn.style.display = 'none';
     suggestionInput.value = '';
     resultsDiv.innerHTML = '';
     shortcutsSection.style.display = 'block';
@@ -1717,7 +1721,6 @@ function closeWidget(widgetName) {
 
 function clearMainSearch() {
     input.value = '';
-    searchClearBtn.style.display = 'none';
     suggestionInput.value = '';
     input.focus();
 }
@@ -1729,15 +1732,6 @@ function performMainSearch() {
         handleSearch(query);
     }
 }
-
-// Show/hide clear button
-input.addEventListener('input', function() {
-    if (this.value.trim()) {
-        searchClearBtn.style.display = 'inline-block';
-    } else {
-        searchClearBtn.style.display = 'none';
-    }
-});
 
 // Weather icon click handler
 weatherTrigger.addEventListener('click', async function() {
@@ -2718,8 +2712,15 @@ input.addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
         e.preventDefault();
         handleSearch();
-    } else if (e.key === "ArrowRight") {
+    } else if (e.key === "ArrowRight" || e.key === "Tab") {
+        // Desktop: Arrow Right or Tab to autocomplete
         if (currentSuggestion && input.selectionStart === input.value.length) {
+            e.preventDefault();
+            completeSuggestion();
+        }
+    } else if (e.key === " " && window.innerWidth <= 768) {
+        // Mobile: Space bar to autocomplete
+        if (currentSuggestion && input.value.trim()) {
             e.preventDefault();
             completeSuggestion();
         }
@@ -2727,7 +2728,8 @@ input.addEventListener("keydown", function(e) {
 });
 
 input.addEventListener("click", function() {
-    if (currentSuggestion) {
+    // Mobile: Tap to autocomplete
+    if (currentSuggestion && window.innerWidth <= 768) {
         completeSuggestion();
     }
 });
