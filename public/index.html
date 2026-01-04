@@ -1070,7 +1070,7 @@ body {
 .read-more {
     font-size: 14px;
     color: #1a0dab;
-    text-decoration: none;
+    cursor: pointer;
     display: inline-block;
 }
 
@@ -2811,18 +2811,19 @@ function search(query) {
                 const summary = item.summary || item.content || '';
                 const isTruncated = summary.length > maxLength;
                 const displaySummary = isTruncated ? summary.substring(0, maxLength) + '...' : summary;
+                const fullSummary = summary;
 
                 div.innerHTML = `
                     <div class="result-source">
-                        ${item.favicon ? `<img src="${item.favicon}" class="result-favicon" alt="" onerror="this.style.display='none'">` : ""}
+                        ${item.favicon ? `<img src="${item.favicon}" class="result-favicon" alt="">` : ""}
                         <span class="result-source-name">${escapeHtml(item.source || domain)}</span>
                     </div>
                     <div class="result-url-display">${escapeHtml(item.url)}</div>
                     <h3 class="result-title">
-                        <a href="${escapeHtml(item.url)}" target="_blank">${escapeHtml(item.title)}</a>
+                        <a href="${escapeHtml(item.url)}">${escapeHtml(item.title)}</a>
                     </h3>
-                    <div id="${summaryId}" class="result-snippet">${escapeHtml(displaySummary)}</div>
-                    ${isTruncated ? `<a class="read-more" href="${escapeHtml(item.url)}" target="_blank">Read more</a>` : ''}
+                    <div id="${summaryId}" class="result-snippet" data-full="${escapeHtml(fullSummary)}">${escapeHtml(displaySummary)}</div>
+                    ${isTruncated ? `<a class="read-more" onclick="toggleSummary('${summaryId}', this)">Read more</a>` : ''}
                 `;
 
                 resultsDiv.appendChild(div);
@@ -2831,6 +2832,24 @@ function search(query) {
         .catch(err => {
             resultsDiv.innerHTML = `<div class="error">Search failed. Please try again.</div>`;
         });
+}
+
+function toggleSummary(id, el) {
+    const snippet = document.getElementById(id);
+    const fullText = snippet.getAttribute('data-full');
+    const isExpanded = snippet.classList.contains('expanded');
+    
+    if (isExpanded) {
+        // Show truncated version
+        snippet.textContent = fullText.substring(0, 160) + '...';
+        snippet.classList.remove('expanded');
+        el.textContent = 'Read more';
+    } else {
+        // Show full version
+        snippet.textContent = fullText;
+        snippet.classList.add('expanded');
+        el.textContent = 'Show less';
+    }
 }
 
 function escapeHtml(text) {
