@@ -32,18 +32,16 @@ Respond in this exact JSON format:
   "queryType": "SIMPLE|BRAND|FACTUAL|COMPLEX",
   "intent": "what user wants",
   "answer": "2-4 sentence response",
-  "ranking": [array of result indices in ranked order],
-  "exclude": [indices to exclude],
+  "ranking": [array of ALL result indices 0-19 in ranked order],
   "topSources": [top 4 indices for sources],
   "reasoning": "why you classified this way"
 }
 
-Rules:
-- Brand searches: Official domain first
-- Prioritize .gov, .edu, Wikipedia
-- Exclude error pages, spam, unrelated content
-- Social media only for person searches
-- Keep ranking diverse`;
+IMPORTANT Rules:
+- ALWAYS include ALL 20 results in ranking array (no exclusions)
+- Brand searches: Put official domain first in ranking
+- Prioritize .gov, .edu, Wikipedia higher in ranking
+- Just reorder by quality - do NOT exclude any results`;
 
     try {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {

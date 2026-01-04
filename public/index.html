@@ -1583,9 +1583,9 @@ body {
 }
 
 .ai-summary {
-    margin-bottom: 20px;
-    padding: 16px 0;
-    border-bottom: 1px solid #ddd;
+    margin-bottom: 24px;
+    padding: 0 0 24px 0;
+    border-bottom: 1px solid #dadce0;
 }
 
 .answer-header, .brand-header {
@@ -1600,11 +1600,11 @@ body {
 .ai-summary-header {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-weight: 600;
-    font-size: 15px;
-    margin-bottom: 8px;
-    color: #202124;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: #1a73e8;
 }
 
 .answer-text, .brand-description {
@@ -1614,8 +1614,18 @@ body {
 
 .ai-summary-text {
     font-size: 14px;
-    line-height: 1.6;
-    color: #4d5156;
+    line-height: 1.58;
+    color: #202124;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.ai-summary-text p {
+    margin: 0 0 12px 0;
+}
+
+.ai-summary-text p:last-child {
+    margin-bottom: 0;
 }
 
 .simple-answer .answer-text {
@@ -1661,7 +1671,17 @@ body {
     }
     
     .ai-summary {
-        padding: 12px 0;
+        padding: 0 0 20px 0;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #3c4043;
+    }
+    
+    .ai-summary-header {
+        color: #8ab4f8;
+    }
+    
+    .ai-summary-text {
+        color: #e8eaed;
     }
 }
 </style>
@@ -2934,13 +2954,29 @@ function displayAIResponse(ai, results) {
             resultsDiv.innerHTML = `<div class="factual-answer"><div class="answer-header"><span>📌</span><span>Answer</span></div><div class="answer-text">${escapeHtml(answer)}</div>${sources.length > 0 ? `<div class="answer-sources"><div class="sources-header">Sources:</div>${sourcesHTML}</div>` : ''}</div>`;
             break;
         case 'COMPLEX':
-            resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>🤖</span><span>AI Summary</span></div><div class="ai-summary-text">${escapeHtml(answer)}</div></div>`;
+            // Format answer into paragraphs (split by periods if multiple sentences)
+            const formattedAnswer = formatAIParagraphs(answer);
+            resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text">${formattedAnswer}</div></div>`;
             displayResults(rankedResults);
             break;
         default:
-            resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>🤖</span><span>AI Summary</span></div><div class="ai-summary-text">${escapeHtml(answer)}</div></div>`;
+            const formattedDefault = formatAIParagraphs(answer);
+            resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text">${formattedDefault}</div></div>`;
             displayResults(rankedResults);
     }
+}
+
+function formatAIParagraphs(text) {
+    // Split by double newlines or by sentences (every 2-3 sentences becomes a paragraph)
+    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+    const paragraphs = [];
+    
+    for (let i = 0; i < sentences.length; i += 2) {
+        const para = sentences.slice(i, i + 2).join(' ').trim();
+        paragraphs.push(`<p>${escapeHtml(para)}</p>`);
+    }
+    
+    return paragraphs.join('');
 }
 
 function displayResults(results) {
