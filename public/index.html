@@ -149,7 +149,7 @@ body {
 }
 
 .icon-emoji {
-    font-size: 24px;
+    font-size: 28px;
 }
 
 .widget-icon.hidden {
@@ -1012,26 +1012,37 @@ body {
     margin-bottom: 28px;
 }
 
-.result-url {
+.result-source {
     display: flex;
     align-items: center;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
 }
 
-.result-url img {
+.result-favicon {
     width: 18px;
     height: 18px;
-    margin-right: 12px;
+    margin-right: 8px;
+    border-radius: 50%;
 }
 
-.result-url-text {
+.result-source-name {
     font-size: 14px;
     line-height: 20px;
     color: #202124;
 }
 
+.result-url-display {
+    font-size: 12px;
+    line-height: 18px;
+    color: #5f6368;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .result-title {
-    margin: 0 0 3px 0;
+    margin: 0 0 4px 0;
     font-size: 20px;
     line-height: 26px;
 }
@@ -1053,19 +1064,13 @@ body {
     font-size: 14px;
     line-height: 22px;
     color: #4d5156;
-    max-height: 44px;
-    overflow: hidden;
-}
-
-.result-snippet.expanded {
-    max-height: none;
+    margin-bottom: 4px;
 }
 
 .read-more {
     font-size: 14px;
     color: #1a0dab;
-    cursor: pointer;
-    margin-top: 4px;
+    text-decoration: none;
     display: inline-block;
 }
 
@@ -1155,8 +1160,16 @@ body {
         margin-bottom: 12px;
     }
     
-    .result-url-text {
+    .result-source-name {
+        color: #e8eaed;
+    }
+    
+    .result-url-display {
         color: #9aa0a6;
+    }
+    
+    .result-snippet {
+        color: #bdc1c6;
     }
     
     .result-title a {
@@ -2713,14 +2726,8 @@ input.addEventListener("keydown", function(e) {
         e.preventDefault();
         handleSearch();
     } else if (e.key === "ArrowRight" || e.key === "Tab") {
-        // Desktop: Arrow Right or Tab to autocomplete
+        // Desktop only: Arrow Right or Tab to autocomplete
         if (currentSuggestion && input.selectionStart === input.value.length) {
-            e.preventDefault();
-            completeSuggestion();
-        }
-    } else if (e.key === " " && window.innerWidth <= 768) {
-        // Mobile: Space bar to autocomplete
-        if (currentSuggestion && input.value.trim()) {
             e.preventDefault();
             completeSuggestion();
         }
@@ -2728,7 +2735,7 @@ input.addEventListener("keydown", function(e) {
 });
 
 input.addEventListener("click", function() {
-    // Mobile: Tap to autocomplete
+    // Mobile only: Tap to autocomplete
     if (currentSuggestion && window.innerWidth <= 768) {
         completeSuggestion();
     }
@@ -2789,17 +2796,33 @@ function search(query) {
                 div.className = "result";
 
                 const summaryId = "summary-" + Math.random().toString(36).substr(2, 9);
+                
+                // Extract domain from URL
+                let domain = '';
+                try {
+                    const url = new URL(item.url);
+                    domain = url.hostname.replace('www.', '');
+                } catch (e) {
+                    domain = item.source || '';
+                }
+                
+                // Truncate summary if too long
+                const maxLength = 160;
+                const summary = item.summary || item.content || '';
+                const isTruncated = summary.length > maxLength;
+                const displaySummary = isTruncated ? summary.substring(0, maxLength) + '...' : summary;
 
                 div.innerHTML = `
-                    <div class="result-url">
-                        ${item.favicon ? `<img src="${item.favicon}" alt="">` : ""}
-                        <div class="result-url-text">${escapeHtml(item.source)}</div>
+                    <div class="result-source">
+                        ${item.favicon ? `<img src="${item.favicon}" class="result-favicon" alt="" onerror="this.style.display='none'">` : ""}
+                        <span class="result-source-name">${escapeHtml(item.source || domain)}</span>
                     </div>
+                    <div class="result-url-display">${escapeHtml(item.url)}</div>
                     <h3 class="result-title">
                         <a href="${escapeHtml(item.url)}" target="_blank">${escapeHtml(item.title)}</a>
                     </h3>
-                    <div id="${summaryId}" class="result-snippet">${escapeHtml(item.summary)}</div>
-                    <a class="read-more" onclick="toggleSummary('${summaryId}', this)">More</a>
+                    <div id="${summaryId}" class="result-snippet">${escapeHtml(displaySummary)}</div>
+                    ${isTruncated ? `<a class="read-more" href="${escapeHtml(item.url)}" target="_blank">Read more</a>` : ''}
                 `;
 
                 resultsDiv.appendChild(div);
@@ -2808,12 +2831,6 @@ function search(query) {
         .catch(err => {
             resultsDiv.innerHTML = `<div class="error">Search failed. Please try again.</div>`;
         });
-}
-
-function toggleSummary(id, el) {
-    const s = document.getElementById(id);
-    s.classList.toggle("expanded");
-    el.textContent = s.classList.contains("expanded") ? "Less" : "More";
 }
 
 function escapeHtml(text) {
