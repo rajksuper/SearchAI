@@ -2791,7 +2791,15 @@ function search(query) {
                 return;
             }
 
-            data.forEach(item => {
+            // Filter out unwanted social media results
+            const filteredResults = data.filter(item => !shouldExcludeResult(item, query));
+            
+            if (filteredResults.length === 0) {
+                resultsDiv.innerHTML = '<div class="loading">No results found</div>';
+                return;
+            }
+
+            filteredResults.forEach(item => {
                 const div = document.createElement("div");
                 div.className = "result";
 
@@ -2832,6 +2840,56 @@ function search(query) {
         .catch(err => {
             resultsDiv.innerHTML = `<div class="error">Search failed. Please try again.</div>`;
         });
+}
+
+function shouldExcludeResult(item, query) {
+    try {
+        const url = new URL(item.url);
+        const domain = url.hostname.replace('www.', '');
+        
+        // Always exclude these (100% useless)
+        const alwaysExclude = ['tiktok.com', 'snapchat.com'];
+        if (alwaysExclude.includes(domain)) {
+            return true; // EXCLUDE
+        }
+        
+        // Exclude Facebook/Instagram unless searching for a person
+        const socialPlatforms = ['facebook.com', 'fb.com', 'instagram.com'];
+        if (socialPlatforms.includes(domain)) {
+            if (isProbablyPersonSearch(query)) {
+                return false; // KEEP for person searches
+            }
+            return true; // EXCLUDE for everything else
+        }
+        
+        return false; // Keep everything else
+    } catch (e) {
+        return false; // Keep if URL parsing fails
+    }
+}
+
+function isProbablyPersonSearch(query) {
+    const q = query.trim();
+    const words = q.split(/\s+/);
+    
+    // 1. Explicitly mentions person/profile
+    if (/\b(profile|account|page|who is)\b/i.test(q)) {
+        return true;
+    }
+    
+    // 2. Short query (1-3 words) with capital letters = likely a name
+    if (words.length <= 3) {
+        const hasCapitalLetter = /[A-Z]/.test(q);
+        const noQuestionWords = !/^(how|what|where|when|why|which|best|top)/i.test(q);
+        return hasCapitalLetter && noQuestionWords;
+    }
+    
+    // 3. Common name patterns (First Last)
+    if (/^[A-Z][a-z]+ [A-Z][a-z]+/.test(q)) {
+        return true; // "John Smith" pattern
+    }
+    
+    return false;
 }
 
 function toggleSummary(id, el) {
