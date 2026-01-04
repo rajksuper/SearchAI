@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Search AI - Fast. Clean. No spam.</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
 <style>
 body {
     font-family: arial, sans-serif;
@@ -1808,7 +1809,7 @@ function performMainSearch() {
     const query = input.value.trim();
     if (query) {
         closeAllWidgets();
-        handleSearch(query);
+        handleSearch();
     }
 }
 
@@ -2844,7 +2845,7 @@ async function aiSearch(query) {
     resultsDiv.innerHTML = '<div class="loading">🔍 AI-powered search...</div>';
     
     try {
-        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=20`);
         const results = await response.json();
         
         const filtered = results.filter(r => !shouldExcludeResult(r, query));
@@ -2918,71 +2919,6 @@ function displayResults(results) {
     });
 }
 
-function search(query) {
-    weatherWidget.style.display = 'none';
-    shortcutsSection.style.display = 'none';
-    resultsDiv.innerHTML = '<div class="loading">Searching...</div>';
-
-    fetch(`/api/search?q=${encodeURIComponent(query)}`)
-        .then(res => res.json())
-        .then(data => {
-            resultsDiv.innerHTML = "";
-            
-            if (data.length === 0) {
-                resultsDiv.innerHTML = '<div class="loading">No results found</div>';
-                return;
-            }
-
-            // Filter out unwanted social media results
-            const filteredResults = data.filter(item => !shouldExcludeResult(item, query));
-            
-            if (filteredResults.length === 0) {
-                resultsDiv.innerHTML = '<div class="loading">No results found</div>';
-                return;
-            }
-
-            filteredResults.forEach(item => {
-                const div = document.createElement("div");
-                div.className = "result";
-
-                const summaryId = "summary-" + Math.random().toString(36).substr(2, 9);
-                
-                // Extract domain from URL
-                let domain = '';
-                try {
-                    const url = new URL(item.url);
-                    domain = url.hostname.replace('www.', '');
-                } catch (e) {
-                    domain = item.source || '';
-                }
-                
-                // Truncate summary if too long
-                const maxLength = 160;
-                const summary = item.summary || item.content || '';
-                const isTruncated = summary.length > maxLength;
-                const displaySummary = isTruncated ? summary.substring(0, maxLength) + '...' : summary;
-                const fullSummary = summary;
-
-                div.innerHTML = `
-                    <div class="result-source">
-                        ${item.favicon ? `<img src="${item.favicon}" class="result-favicon" alt="">` : ""}
-                        <span class="result-source-name">${escapeHtml(item.source || domain)}</span>
-                    </div>
-                    <div class="result-url-display">${escapeHtml(item.url)}</div>
-                    <h3 class="result-title">
-                        <a href="${escapeHtml(item.url)}">${escapeHtml(item.title)}</a>
-                    </h3>
-                    <div id="${summaryId}" class="result-snippet" data-full="${escapeHtml(fullSummary)}">${escapeHtml(displaySummary)}</div>
-                    ${isTruncated ? `<a class="read-more" onclick="toggleSummary('${summaryId}', this)">Read more</a>` : ''}
-                `;
-
-                resultsDiv.appendChild(div);
-            });
-        })
-        .catch(err => {
-            resultsDiv.innerHTML = `<div class="error">Search failed. Please try again.</div>`;
-        });
-}
 
 function shouldExcludeResult(item, query) {
     try {
@@ -2999,7 +2935,7 @@ function shouldExcludeResult(item, query) {
         // Exclude security warning/error pages
         if (content.includes('Your connection is not private') ||
             content.includes('Attackers might be trying') ||
-            content.includes('This site can't be reached')) {
+            content.includes('This site can\'t be reached')) {
             return true;
         }
         
