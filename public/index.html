@@ -2949,9 +2949,30 @@ function displayAIResponse(ai, results) {
             displayResults(rankedResults);
             break;
         case 'FACTUAL':
-            const sources = (ai.topSources || []).filter(i => i < results.length).map(i => results[i]).filter(r => r).slice(0, 4);
-            const sourcesHTML = sources.map(s => `<a href="${escapeHtml(s.url)}" class="result-title" style="display:block; margin:8px 0;">${escapeHtml(s.title)}</a>`).join('');
-            resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text"><p>${escapeHtml(answer)}</p></div>${sources.length > 0 ? `<div style="margin-top:16px;"><div style="font-size:13px;color:#70757a;margin-bottom:8px;">Sources:</div>${sourcesHTML}</div>` : ''}</div>`;
+            const sources = (ai.topSources || []).filter(i => i < results.length).map(i => results[i]).filter(r => r).slice(0, 10);
+            let sourcesHTML = '';
+            if (sources.length > 0) {
+                sourcesHTML = '<div style="margin-top:20px;">';
+                sources.forEach(s => {
+                    const domain = extractDomainFromURL(s.url);
+                    const snippet = (s.content || s.summary || '').substring(0, 160);
+                    sourcesHTML += `
+                        <div style="margin-bottom:20px;">
+                            <div class="result-source">
+                                ${s.favicon ? `<img src="${s.favicon}" class="result-favicon" alt="">` : ''}
+                                <span class="result-source-name">${escapeHtml(s.source || domain)}</span>
+                            </div>
+                            <div class="result-url-display">${escapeHtml(s.url)}</div>
+                            <h3 class="result-title">
+                                <a href="${escapeHtml(s.url)}">${escapeHtml(s.title)}</a>
+                            </h3>
+                            <div class="result-snippet">${escapeHtml(snippet)}${snippet.length >= 160 ? '...' : ''}</div>
+                        </div>
+                    `;
+                });
+                sourcesHTML += '</div>';
+            }
+            resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text"><p>${escapeHtml(answer)}</p></div></div>${sourcesHTML}`;
             break;
         case 'COMPLEX':
             // Format answer into paragraphs (split by periods if multiple sentences)
@@ -3041,6 +3062,14 @@ function toggleSummary(id, el) {
         snippet.textContent = fullText;
         snippet.classList.add('expanded');
         el.textContent = 'Show less';
+    }
+}
+
+function extractDomainFromURL(url) {
+    try {
+        return new URL(url).hostname.replace('www.', '');
+    } catch {
+        return '';
     }
 }
 
