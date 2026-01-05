@@ -24,16 +24,15 @@ Classify this query and provide a response:
 Query Types:
 - SIMPLE: Math, definitions, conversions → Direct answer only
 - BRAND: Company/service search → Brief description, official site first
-- FACTUAL: "What/Who/When/Where" → Answer + top 4 sources
+- FACTUAL: "What/Who/When/Where" → Answer + all ranked results
 - COMPLEX: Comparisons, "best", how-to → Summary + ranked results
 
 Respond in this exact JSON format:
 {
   "queryType": "SIMPLE|BRAND|FACTUAL|COMPLEX",
   "intent": "what user wants",
-  "answer": "2-4 sentence response",
+  "answer": "6-8 sentence response",
   "ranking": [array of ALL result indices 0-19 in ranked order],
-  "topSources": [top 4 indices for sources],
   "reasoning": "why you classified this way"
 }
 
