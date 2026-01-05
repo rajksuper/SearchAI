@@ -2942,49 +2942,16 @@ function displayAIResponse(ai, results) {
     
     switch(queryType) {
         case 'SIMPLE':
-            resultsDiv.innerHTML = `<div class="simple-answer"><div class="answer-header"><span>📌</span><span>Answer</span></div><div class="answer-text">${escapeHtml(answer)}</div></div>`;
+            resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text"><p style="font-size:20px;font-weight:500;">${escapeHtml(answer)}</p></div></div>`;
             break;
         case 'BRAND':
             resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text"><p>${escapeHtml(answer)}</p></div></div>`;
             displayResults(rankedResults);
             break;
         case 'FACTUAL':
-            const sources = (ai.topSources || []).filter(i => i < results.length).map(i => results[i]).filter(r => r).slice(0, 10);
-            const sourceIndices = new Set((ai.topSources || []).slice(0, 10));
-            const remainingResults = results.filter((r, i) => !sourceIndices.has(i));
-            
-            let sourcesHTML = '';
-            if (sources.length > 0) {
-                sourcesHTML = '<div style="margin-top:20px;">';
-                sources.forEach(s => {
-                    const domain = extractDomainFromURL(s.url);
-                    const snippet = (s.content || s.summary || '').substring(0, 160);
-                    sourcesHTML += `
-                        <div style="margin-bottom:20px;">
-                            <div class="result-source">
-                                ${s.favicon ? `<img src="${s.favicon}" class="result-favicon" alt="">` : ''}
-                                <span class="result-source-name">${escapeHtml(s.source || domain)}</span>
-                            </div>
-                            <div class="result-url-display">${escapeHtml(s.url)}</div>
-                            <h3 class="result-title">
-                                <a href="${escapeHtml(s.url)}">${escapeHtml(s.title)}</a>
-                            </h3>
-                            <div class="result-snippet">${escapeHtml(snippet)}${snippet.length >= 160 ? '...' : ''}</div>
-                        </div>
-                    `;
-                });
-                sourcesHTML += '</div>';
-            }
-            
-            resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text"><p>${escapeHtml(answer)}</p></div></div>${sourcesHTML}`;
-            
-            // Show remaining results after separator
-            if (remainingResults.length > 0) {
-                const separator = document.createElement('div');
-                separator.style.cssText = 'border-top: 1px solid #dadce0; margin: 24px 0; padding-top: 24px;';
-                resultsDiv.appendChild(separator);
-                displayResults(remainingResults);
-            }
+            const factualFormatted = formatAIParagraphs(answer);
+            resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text">${factualFormatted}</div></div>`;
+            displayResults(rankedResults);
             break;
         case 'COMPLEX':
             // Format answer into paragraphs (split by periods if multiple sentences)
