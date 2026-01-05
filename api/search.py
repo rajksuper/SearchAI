@@ -21,7 +21,13 @@ def tavily_search(query):
         "api_key": TAVILY_API_KEY,
         "query": query,
         "max_results": 20,
-        "include_favicon": True
+        "include_favicon": True,
+        "exclude_domains": [
+            "tiktok.com",
+            "snapchat.com", 
+            "facebook.com",
+            "instagram.com"
+        ]
     }
     
     # Make HTTP POST request
