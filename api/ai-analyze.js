@@ -50,7 +50,7 @@ IMPORTANT Rules:
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'gpt-5-nano',
+                model: 'gpt-4o-nano',
                 messages: [
                     { role: 'system', content: systemPrompt },
                     { role: 'user', content: userPrompt }
