@@ -105,6 +105,7 @@ class handler(BaseHTTPRequestHandler):
             output = {
                 "answer": response.get("answer", ""),
                 "images": response.get("images", []),
+                "topic": topic,
                 "results": results
             }
             
