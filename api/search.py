@@ -43,6 +43,8 @@ def tavily_search(query):
         "max_results": 20,
         "include_favicon": True,
         "include_answer": "advanced",
+        "include_images": True,
+        "include_image_descriptions": True,
         "topic": topic,
         "exclude_domains": [
             "tiktok.com",
@@ -102,6 +104,7 @@ class handler(BaseHTTPRequestHandler):
             # Include Tavily's AI answer if available
             output = {
                 "answer": response.get("answer", ""),
+                "images": response.get("images", []),
                 "results": results
             }
             
