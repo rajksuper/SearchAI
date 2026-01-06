@@ -3220,7 +3220,9 @@ function loadImagesProgressively(images) {
     let galleryHTML = '<div class="image-gallery">';
     
     imagesToShow.forEach(img => {
-        galleryHTML += `<img src="${escapeHtml(img.url)}" alt="Related image" loading="lazy">`;
+        // Handle both string URLs and objects with url property
+        const imageUrl = typeof img === 'string' ? img : (img.url || img);
+        galleryHTML += `<img src="${escapeHtml(imageUrl)}" alt="Related image" loading="lazy">`;
     });
     
     galleryHTML += '</div>';
