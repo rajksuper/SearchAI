@@ -3129,6 +3129,17 @@ async function aiSearch(query) {
         return;
     }
     
+    // Check cache first
+    const cacheKey = `search_${query}`;
+    const cached = sessionStorage.getItem(cacheKey);
+    
+    if (cached) {
+        // Load from cache instantly!
+        const cachedData = JSON.parse(cached);
+        displayCachedResults(cachedData);
+        return;
+    }
+    
     resultsDiv.innerHTML = '<div class="loading">🔍 AI-powered search...</div>';
     
     try {
@@ -3152,12 +3163,29 @@ async function aiSearch(query) {
         });
         
         const aiData = await aiResponse.json();
+        
+        // Cache the results for instant back/forward
+        const cacheKey = `search_${query}`;
+        const cacheData = {
+            aiData,
+            results,
+            tavilyAnswer,
+            tavilyImages,
+            tavilyTopic
+        };
+        sessionStorage.setItem(cacheKey, JSON.stringify(cacheData));
+        
         displayAIResponse(aiData, results, tavilyAnswer, tavilyImages, tavilyTopic);
         
     } catch (error) {
         console.error('Search error:', error);
         resultsDiv.innerHTML = '<div class="error">Search failed. Please try again.</div>';
     }
+}
+
+function displayCachedResults(cachedData) {
+    const { aiData, results, tavilyAnswer, tavilyImages, tavilyTopic } = cachedData;
+    displayAIResponse(aiData, results, tavilyAnswer, tavilyImages, tavilyTopic);
 }
 
 function displayAIResponse(ai, results, tavilyAnswer, tavilyImages, tavilyTopic) {
