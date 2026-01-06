@@ -43,7 +43,6 @@ def tavily_search(query):
         "max_results": 20,
         "include_favicon": True,
         "include_answer": "advanced",
-        "search_depth": "fast",
         "topic": topic,
         "exclude_domains": [
             "tiktok.com",
