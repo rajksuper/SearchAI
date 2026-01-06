@@ -1556,7 +1556,7 @@ body {
         display: none;
     }
 }
-/* AI Answer Styles */
+/* AI Answer Styles - Google-style */
 .simple-answer {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -1602,9 +1602,10 @@ body {
     align-items: center;
     gap: 6px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 400;
     margin-bottom: 12px;
     color: #1a73e8;
+    font-family: 'Google Sans', 'Roboto', arial, sans-serif;
 }
 
 .answer-text, .brand-description {
@@ -1616,12 +1617,16 @@ body {
     font-size: 14px;
     line-height: 1.58;
     color: #202124;
-    white-space: pre-wrap;
+    font-family: arial, sans-serif;
+    white-space: normal;
     word-wrap: break-word;
 }
 
 .ai-summary-text p {
-    margin: 0 0 12px 0;
+    margin: 0 0 16px 0;
+    font-size: 14px;
+    line-height: 1.58;
+    color: #202124;
 }
 
 .ai-summary-text p:last-child {
@@ -1678,10 +1683,20 @@ body {
     
     .ai-summary-header {
         color: #8ab4f8;
+        font-size: 14px;
     }
     
     .ai-summary-text {
         color: #e8eaed;
+        font-size: 14px;
+        line-height: 1.58;
+    }
+    
+    .ai-summary-text p {
+        color: #e8eaed;
+        font-size: 14px;
+        line-height: 1.58;
+        margin: 0 0 16px 0;
     }
 }
 </style>
