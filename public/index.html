@@ -2014,6 +2014,14 @@ function goHome() {
     suggestionInput.value = '';
     resultsDiv.innerHTML = '';
     shortcutsSection.style.display = 'block';
+    
+    // Clear URL query parameter
+    const url = new URL(window.location);
+    url.searchParams.delete('q');
+    window.history.pushState({}, '', url);
+    
+    // Restore original title
+    document.title = 'Search AI - Fast. Clean. No spam.';
 }
 
 function closeAllWidgets() {
@@ -3097,6 +3105,14 @@ function handleSearch() {
         return;
     }
     
+    // Update URL with query parameter
+    const url = new URL(window.location);
+    url.searchParams.set('q', q);
+    window.history.pushState({}, '', url);
+    
+    // Update page title for SEO
+    document.title = `${q} - Search AI`;
+    
     aiSearch(q);
 }
 
@@ -3250,6 +3266,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 closeLightbox();
             }
         });
+    }
+    
+    // Check if there's a query in URL and auto-search
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('q');
+    if (query) {
+        input.value = query;
+        aiSearch(query);
+    }
+});
+
+// Handle browser back/forward buttons
+window.addEventListener('popstate', function(event) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('q');
+    
+    if (query) {
+        // User went back/forward to a search
+        input.value = query;
+        document.title = `${query} - Search AI`;
+        aiSearch(query);
+    } else {
+        // User went back to home page
+        goHome();
+        document.title = 'Search AI - Fast. Clean. No spam.';
     }
 });
 
