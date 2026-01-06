@@ -2908,13 +2908,16 @@ async function aiSearch(query) {
     
     try {
         const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=20`);
-        const results = await response.json();
+        const data = await response.json();
+        const tavilyAnswer = data.answer || '';
+        const results = data.results || [];
         
         if (results.length === 0) {
             resultsDiv.innerHTML = '<div class="error">No results found</div>';
             return;
         }
         
+        // Get AI ranking only
         const aiResponse = await fetch('/api/ai-analyze', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -2922,7 +2925,7 @@ async function aiSearch(query) {
         });
         
         const aiData = await aiResponse.json();
-        displayAIResponse(aiData, results);
+        displayAIResponse(aiData, results, tavilyAnswer);
         
     } catch (error) {
         console.error('Search error:', error);
@@ -2930,8 +2933,8 @@ async function aiSearch(query) {
     }
 }
 
-function displayAIResponse(ai, results) {
-    const { queryType, answer, ranking } = ai;
+function displayAIResponse(ai, results, tavilyAnswer) {
+    const { queryType, ranking } = ai;
     
     // Use AI ranking, or original order if ranking missing
     const rankedResults = ranking && ranking.length > 0
@@ -2942,32 +2945,32 @@ function displayAIResponse(ai, results) {
     
     switch(queryType) {
         case 'SIMPLE':
-            resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text"><p style="font-size:20px;font-weight:500;">${escapeHtml(answer)}</p></div></div>`;
+            // For simple queries, use Tavily answer if available
+            if (tavilyAnswer) {
+                resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text"><p style="font-size:20px;font-weight:500;">${escapeHtml(tavilyAnswer)}</p></div></div>`;
+            }
             break;
         case 'BRAND':
-            resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text"><p>${escapeHtml(answer)}</p></div></div>`;
-            displayResults(rankedResults);
-            break;
         case 'FACTUAL':
-            const factualFormatted = formatAIParagraphs(answer);
-            resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text">${factualFormatted}</div></div>`;
-            displayResults(rankedResults);
-            break;
         case 'COMPLEX':
-            // Format answer into paragraphs (split by periods if multiple sentences)
-            const formattedAnswer = formatAIParagraphs(answer);
-            resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text">${formattedAnswer}</div></div>`;
+            // Use Tavily's advanced answer for all query types
+            if (tavilyAnswer) {
+                const formattedAnswer = formatTavilyAnswer(tavilyAnswer);
+                resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text">${formattedAnswer}</div></div>`;
+            }
             displayResults(rankedResults);
             break;
         default:
-            const formattedDefault = formatAIParagraphs(answer);
-            resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text">${formattedDefault}</div></div>`;
+            if (tavilyAnswer) {
+                const formattedDefault = formatTavilyAnswer(tavilyAnswer);
+                resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text">${formattedDefault}</div></div>`;
+            }
             displayResults(rankedResults);
     }
 }
 
-function formatAIParagraphs(text) {
-    // Split by double newlines or by sentences (every 2-3 sentences becomes a paragraph)
+function formatTavilyAnswer(text) {
+    // Split Tavily's answer into paragraphs (by double newlines or every 2-3 sentences)
     const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
     const paragraphs = [];
     

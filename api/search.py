@@ -22,6 +22,7 @@ def tavily_search(query):
         "query": query,
         "max_results": 20,
         "include_favicon": True,
+        "include_answer": "advanced",
         "exclude_domains": [
             "tiktok.com",
             "snapchat.com", 
@@ -77,12 +78,18 @@ class handler(BaseHTTPRequestHandler):
                     "summary": r.get("content")
                 })
             
+            # Include Tavily's AI answer if available
+            output = {
+                "answer": response.get("answer", ""),
+                "results": results
+            }
+            
             # Send response
             self.send_response(200)
             self.send_header("Content-type", "application/json")
             self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
-            self.wfile.write(json.dumps(results).encode())
+            self.wfile.write(json.dumps(output).encode())
             
         except Exception as e:
             self.send_response(500)
