@@ -14,25 +14,19 @@ def derive_name(url):
     return name
 
 def detect_topic(query):
-    """Detect if query is news, finance, or general"""
+    """Detect if query is news/finance or general - combine finance and news for better results"""
     query_lower = query.lower()
     
-    # News keywords
-    news_keywords = ['news', 'latest', 'today', 'yesterday', 'breaking', 'current', 
-                     'recent', 'update', 'happened', 'president', 'election', 
-                     'government', 'politics', 'war', 'crisis', 'attack']
+    # News + Finance keywords (combined for better diversity)
+    news_finance_keywords = ['news', 'latest', 'today', 'yesterday', 'breaking', 'current', 
+                             'recent', 'update', 'happened', 'president', 'election', 
+                             'government', 'politics', 'war', 'crisis', 'attack',
+                             'stock', 'price', 'market', 'trading', 'investment',
+                             'crypto', 'bitcoin', 'nasdaq', 'dow jones', 'earnings',
+                             'revenue', 'profit', 'ipo', 'dividend', 'forex']
     
-    # Finance keywords
-    finance_keywords = ['stock', 'price', 'market', 'trading', 'investment',
-                       'crypto', 'bitcoin', 'nasdaq', 'dow jones', 'earnings',
-                       'revenue', 'profit', 'ipo', 'dividend', 'forex']
-    
-    # Check finance first (more specific)
-    if any(keyword in query_lower for keyword in finance_keywords):
-        return 'finance'
-    
-    # Check news
-    if any(keyword in query_lower for keyword in news_keywords):
+    # Check if news or finance related
+    if any(keyword in query_lower for keyword in news_finance_keywords):
         return 'news'
     
     return 'general'
