@@ -3117,6 +3117,18 @@ function handleSearch() {
 }
 
 async function aiSearch(query) {
+    // Basic validation
+    if (!query || query.length > 500) {
+        resultsDiv.innerHTML = '<div class="error">Invalid search query</div>';
+        return;
+    }
+    
+    // Block suspicious patterns
+    if (query.match(/javascript:|data:|<script/i)) {
+        resultsDiv.innerHTML = '<div class="error">Invalid search query</div>';
+        return;
+    }
+    
     resultsDiv.innerHTML = '<div class="loading">🔍 AI-powered search...</div>';
     
     try {
