@@ -2994,7 +2994,6 @@ async function aiSearch(query) {
         const data = await response.json();
         const tavilyAnswer = data.answer || '';
         const tavilyImages = data.images || [];
-        const tavilyTopic = data.topic || 'general';
         const results = data.results || [];
         
         if (results.length === 0) {
@@ -3010,7 +3009,7 @@ async function aiSearch(query) {
         });
         
         const aiData = await aiResponse.json();
-        displayAIResponse(aiData, results, tavilyAnswer, tavilyImages, tavilyTopic);
+        displayAIResponse(aiData, results, tavilyAnswer, tavilyImages);
         
     } catch (error) {
         console.error('Search error:', error);
@@ -3018,7 +3017,7 @@ async function aiSearch(query) {
     }
 }
 
-function displayAIResponse(ai, results, tavilyAnswer, tavilyImages, tavilyTopic) {
+function displayAIResponse(ai, results, tavilyAnswer, tavilyImages) {
     const { queryType, ranking } = ai;
     
     // Use AI ranking, or original order if ranking missing
@@ -3028,12 +3027,12 @@ function displayAIResponse(ai, results, tavilyAnswer, tavilyImages, tavilyTopic)
     
     resultsDiv.innerHTML = '';
     
-    // Show AI summary + image for ALL searches (you're okay with 3-4s wait)
+    // Get first relevant image
     const firstImage = tavilyImages && tavilyImages.length > 0 ? tavilyImages[0] : null;
     
     switch(queryType) {
         case 'SIMPLE':
-            // For simple queries, show answer
+            // For simple queries, use Tavily answer if available
             if (tavilyAnswer) {
                 resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text"><p style="font-size:20px;font-weight:500;">${escapeHtml(tavilyAnswer)}</p></div></div>`;
             }
@@ -3041,7 +3040,7 @@ function displayAIResponse(ai, results, tavilyAnswer, tavilyImages, tavilyTopic)
         case 'BRAND':
         case 'FACTUAL':
         case 'COMPLEX':
-            // Show summary + image for ALL query types
+            // Use Tavily's advanced answer with image for all query types
             if (tavilyAnswer) {
                 const formattedAnswer = formatTavilyAnswer(tavilyAnswer);
                 
