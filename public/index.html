@@ -22,6 +22,67 @@ body {
 .header {
     text-align: center;
     margin-bottom: 30px;
+    position: relative;
+}
+
+.image-toggle {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toggle-label {
+    font-size: 13px;
+    color: #5f6368;
+    font-weight: 500;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: #1a73e8;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(20px);
 }
 
 .logo {
@@ -1643,6 +1704,41 @@ body {
     width: 200px;
 }
 
+.image-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 16px 0 0 0;
+}
+
+.image-gallery img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.image-gallery img:hover {
+    transform: scale(1.05);
+}
+
+.image-gallery.loading {
+    opacity: 0.5;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.8; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .ai-summary-image img {
     width: 100%;
     height: auto;
@@ -1766,6 +1862,21 @@ body {
     .image-caption {
         color: #9aa0a6;
     }
+    
+    .image-toggle {
+        position: static;
+        margin-top: 12px;
+        justify-content: center;
+    }
+    
+    .image-gallery {
+        grid-template-columns: 1fr;
+        margin: 12px 0;
+    }
+    
+    .image-gallery img {
+        height: 200px;
+    }
 }
 </style>
 </head>
@@ -1775,6 +1886,13 @@ body {
     <div class="header">
         <div class="logo" onclick="goHome()" style="cursor: pointer;">Search AI</div>
         <div class="tagline">Fast. Clean. No spam.</div>
+        <div class="image-toggle">
+            <label class="toggle-switch">
+                <input type="checkbox" id="imageToggle">
+                <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label">Images</span>
+        </div>
     </div>
     
     <div class="search-wrapper">
@@ -1828,6 +1946,16 @@ body {
 <script>
 const input = document.getElementById("searchInput");
 const suggestionInput = document.getElementById("searchSuggestion");
+const imageToggle = document.getElementById("imageToggle");
+
+// Load saved preference
+const showImages = localStorage.getItem('showImages') === 'true';
+imageToggle.checked = showImages;
+
+// Save preference on toggle
+imageToggle.addEventListener('change', function() {
+    localStorage.setItem('showImages', this.checked);
+});
 const resultsDiv = document.getElementById("results");
 const shortcutsSection = document.getElementById("shortcutsSection");
 const shortcutsGrid = document.getElementById("shortcutsGrid");
@@ -3028,8 +3156,8 @@ function displayAIResponse(ai, results, tavilyAnswer, tavilyImages, tavilyTopic)
     
     resultsDiv.innerHTML = '';
     
-    // Show AI summary + image for ALL searches (you're okay with 3-4s wait)
-    const firstImage = tavilyImages && tavilyImages.length > 0 ? tavilyImages[0] : null;
+    // Check if user wants images
+    const showImagesEnabled = imageToggle.checked;
     
     switch(queryType) {
         case 'SIMPLE':
@@ -3042,34 +3170,32 @@ function displayAIResponse(ai, results, tavilyAnswer, tavilyImages, tavilyTopic)
         case 'BRAND':
         case 'FACTUAL':
         case 'COMPLEX':
-            // Show summary + image for ALL query types
+            // Show summary
             if (tavilyAnswer) {
                 const formattedAnswer = formatTavilyAnswer(tavilyAnswer);
                 
-                // Build AI summary with optional image
                 let summaryHTML = '<div class="ai-summary">';
                 summaryHTML += '<div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div>';
+                summaryHTML += `<div class="ai-summary-text">${formattedAnswer}</div>`;
                 
-                if (firstImage) {
-                    // Desktop: Image on right, text on left
-                    // Mobile: Image on top, text below
-                    summaryHTML += `
-                        <div class="ai-summary-content">
-                            <div class="ai-summary-text-with-image">${formattedAnswer}</div>
-                            <div class="ai-summary-image">
-                                <img src="${escapeHtml(firstImage.url)}" alt="${escapeHtml(firstImage.description || '')}" loading="lazy">
-                                ${firstImage.description ? `<div class="image-caption">${escapeHtml(firstImage.description)}</div>` : ''}
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    summaryHTML += `<div class="ai-summary-text">${formattedAnswer}</div>`;
+                // Add placeholder for images if enabled
+                if (showImagesEnabled && tavilyImages && tavilyImages.length > 0) {
+                    summaryHTML += '<div id="imageGalleryPlaceholder"></div>';
                 }
                 
                 summaryHTML += '</div>';
                 resultsDiv.innerHTML = summaryHTML;
             }
+            
+            // Display results immediately
             displayResults(rankedResults);
+            
+            // Load images progressively after results are shown
+            if (showImagesEnabled && tavilyImages && tavilyImages.length > 0) {
+                setTimeout(() => {
+                    loadImagesProgressively(tavilyImages);
+                }, 100);
+            }
             break;
         default:
             if (tavilyAnswer) {
@@ -3078,6 +3204,30 @@ function displayAIResponse(ai, results, tavilyAnswer, tavilyImages, tavilyTopic)
             }
             displayResults(rankedResults);
     }
+}
+
+function loadImagesProgressively(images) {
+    const placeholder = document.getElementById('imageGalleryPlaceholder');
+    if (!placeholder) return;
+    
+    // Determine how many images to show
+    const isMobile = window.innerWidth <= 768;
+    const imagesToShow = isMobile ? images.slice(0, 1) : images.slice(0, 4);
+    
+    if (imagesToShow.length === 0) return;
+    
+    // Create gallery container
+    let galleryHTML = '<div class="image-gallery">';
+    
+    imagesToShow.forEach(img => {
+        galleryHTML += `<img src="${escapeHtml(img.url)}" alt="Related image" loading="lazy">`;
+    });
+    
+    galleryHTML += '</div>';
+    
+    // Insert with fade-in animation
+    placeholder.innerHTML = galleryHTML;
+    placeholder.style.animation = 'fadeIn 0.5s ease-in';
 }
 
 function formatTavilyAnswer(text) {
