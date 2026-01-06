@@ -22,67 +22,35 @@ body {
 .header {
     text-align: center;
     margin-bottom: 30px;
-    position: relative;
 }
 
-.image-toggle {
-    position: absolute;
-    top: 10px;
-    right: 0;
-    display: flex;
+.show-images-btn {
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-}
-
-.toggle-label {
+    gap: 6px;
+    padding: 8px 16px;
+    margin: 12px 0 16px 0;
+    background: #f8f9fa;
+    border: 1px solid #e8eaed;
+    border-radius: 20px;
+    cursor: pointer;
     font-size: 13px;
     color: #5f6368;
-    font-weight: 500;
+    transition: all 0.2s;
+    user-select: none;
 }
 
-.toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 24px;
+.show-images-btn:hover {
+    background: #e8eaed;
+    border-color: #dadce0;
 }
 
-.toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+.show-images-btn .icon {
+    font-size: 16px;
 }
 
-.toggle-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.3s;
-    border-radius: 24px;
-}
-
-.toggle-slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: 0.3s;
-    border-radius: 50%;
-}
-
-.toggle-switch input:checked + .toggle-slider {
-    background-color: #1a73e8;
-}
-
-.toggle-switch input:checked + .toggle-slider:before {
-    transform: translateX(20px);
+.show-images-btn.hidden {
+    display: none;
 }
 
 .logo {
@@ -1863,12 +1831,6 @@ body {
         color: #9aa0a6;
     }
     
-    .image-toggle {
-        position: static;
-        margin-top: 12px;
-        justify-content: center;
-    }
-    
     .image-gallery {
         grid-template-columns: 1fr;
         margin: 12px 0;
@@ -1886,13 +1848,6 @@ body {
     <div class="header">
         <div class="logo" onclick="goHome()" style="cursor: pointer;">Search AI</div>
         <div class="tagline">Fast. Clean. No spam.</div>
-        <div class="image-toggle">
-            <label class="toggle-switch">
-                <input type="checkbox" id="imageToggle">
-                <span class="toggle-slider"></span>
-            </label>
-            <span class="toggle-label">Images</span>
-        </div>
     </div>
     
     <div class="search-wrapper">
@@ -1946,16 +1901,6 @@ body {
 <script>
 const input = document.getElementById("searchInput");
 const suggestionInput = document.getElementById("searchSuggestion");
-const imageToggle = document.getElementById("imageToggle");
-
-// Load saved preference
-const showImages = localStorage.getItem('showImages') === 'true';
-imageToggle.checked = showImages;
-
-// Save preference on toggle
-imageToggle.addEventListener('change', function() {
-    localStorage.setItem('showImages', this.checked);
-});
 const resultsDiv = document.getElementById("results");
 const shortcutsSection = document.getElementById("shortcutsSection");
 const shortcutsGrid = document.getElementById("shortcutsGrid");
@@ -3156,9 +3101,6 @@ function displayAIResponse(ai, results, tavilyAnswer, tavilyImages, tavilyTopic)
     
     resultsDiv.innerHTML = '';
     
-    // Check if user wants images
-    const showImagesEnabled = imageToggle.checked;
-    
     switch(queryType) {
         case 'SIMPLE':
             // For simple queries, show answer + results
@@ -3178,24 +3120,36 @@ function displayAIResponse(ai, results, tavilyAnswer, tavilyImages, tavilyTopic)
                 summaryHTML += '<div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div>';
                 summaryHTML += `<div class="ai-summary-text">${formattedAnswer}</div>`;
                 
-                // Add placeholder for images if enabled
-                if (showImagesEnabled && tavilyImages && tavilyImages.length > 0) {
-                    summaryHTML += '<div id="imageGalleryPlaceholder"></div>';
+                // Add show images button if images available
+                if (tavilyImages && tavilyImages.length > 0) {
+                    const isMobile = window.innerWidth <= 768;
+                    const imageCount = isMobile ? 1 : Math.min(4, tavilyImages.length);
+                    const buttonText = isMobile ? 'Show image' : 'Show images';
+                    
+                    summaryHTML += `
+                        <div class="show-images-btn" id="showImagesBtn" data-images='${JSON.stringify(tavilyImages)}'>
+                            <span class="icon">🖼️</span>
+                            <span class="text">${buttonText}</span>
+                        </div>
+                        <div id="imageGalleryPlaceholder"></div>
+                    `;
                 }
                 
                 summaryHTML += '</div>';
                 resultsDiv.innerHTML = summaryHTML;
+                
+                // Add click handler for show images button
+                const showImagesBtn = document.getElementById('showImagesBtn');
+                if (showImagesBtn) {
+                    showImagesBtn.addEventListener('click', function() {
+                        const images = JSON.parse(this.dataset.images);
+                        loadImagesProgressively(images);
+                        this.classList.add('hidden'); // Hide button after click
+                    });
+                }
             }
             
-            // Display results immediately
             displayResults(rankedResults);
-            
-            // Load images progressively after results are shown
-            if (showImagesEnabled && tavilyImages && tavilyImages.length > 0) {
-                setTimeout(() => {
-                    loadImagesProgressively(tavilyImages);
-                }, 100);
-            }
             break;
         default:
             if (tavilyAnswer) {
