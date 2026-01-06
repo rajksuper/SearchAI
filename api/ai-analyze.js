@@ -39,6 +39,8 @@ Ranking Rules:
 - Prioritize .gov, .edu, Wikipedia, major news outlets
 - Brand searches: Put official domain first in ranking
 - Consider authority, relevance, and quality
+- IMPORTANT: Ensure source diversity - avoid ranking multiple results from same domain consecutively
+- Spread out results from same source (e.g., if 10 results from yahoo.com, alternate with other sources)
 - MUST include all 20 indices in ranking array`;
 
     try {

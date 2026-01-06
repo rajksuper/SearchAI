@@ -2970,13 +2970,30 @@ function displayAIResponse(ai, results, tavilyAnswer) {
 }
 
 function formatTavilyAnswer(text) {
-    // Split Tavily's answer into paragraphs (by double newlines or every 2-3 sentences)
-    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
-    const paragraphs = [];
+    if (!text) return '';
     
+    // Remove inline URLs in brackets like 【https://...】
+    text = text.replace(/【[^】]*】/g, '');
+    
+    // Remove inline URLs in parentheses like (https://...)
+    text = text.replace(/\(https?:\/\/[^\)]+\)/g, '');
+    
+    // Remove standalone URLs
+    text = text.replace(/https?:\/\/\S+/g, '');
+    
+    // Clean up extra spaces
+    text = text.replace(/\s+/g, ' ').trim();
+    
+    // Split into sentences
+    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+    
+    // Group into paragraphs (every 2-3 sentences)
+    const paragraphs = [];
     for (let i = 0; i < sentences.length; i += 2) {
         const para = sentences.slice(i, i + 2).join(' ').trim();
-        paragraphs.push(`<p>${escapeHtml(para)}</p>`);
+        if (para) {
+            paragraphs.push(`<p>${escapeHtml(para)}</p>`);
+        }
     }
     
     return paragraphs.join('');
