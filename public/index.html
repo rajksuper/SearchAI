@@ -2993,7 +2993,7 @@ async function aiSearch(query) {
         const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=20`);
         const data = await response.json();
         const tavilyAnswer = data.answer || '';
-        const tavilyTopic = data.topic || 'general';
+        const tavilyImages = data.images || [];
         const results = data.results || [];
         
         if (results.length === 0) {
@@ -3009,7 +3009,7 @@ async function aiSearch(query) {
         });
         
         const aiData = await aiResponse.json();
-        displayAIResponse(aiData, results, tavilyAnswer, tavilyTopic);
+        displayAIResponse(aiData, results, tavilyAnswer, tavilyImages);
         
     } catch (error) {
         console.error('Search error:', error);
@@ -3017,7 +3017,7 @@ async function aiSearch(query) {
     }
 }
 
-function displayAIResponse(ai, results, tavilyAnswer, tavilyTopic) {
+function displayAIResponse(ai, results, tavilyAnswer, tavilyImages) {
     const { queryType, ranking } = ai;
     
     // Use AI ranking, or original order if ranking missing
@@ -3027,13 +3027,12 @@ function displayAIResponse(ai, results, tavilyAnswer, tavilyTopic) {
     
     resultsDiv.innerHTML = '';
     
-    // Show AI summary for: news/finance OR informational queries (who/what/when/why)
-    // Hide for: product searches, how-to tutorials, lists, comparisons
-    const showSummary = tavilyTopic === 'news' || queryType === 'FACTUAL';
+    // Get first relevant image
+    const firstImage = tavilyImages && tavilyImages.length > 0 ? tavilyImages[0] : null;
     
     switch(queryType) {
         case 'SIMPLE':
-            // For simple queries, always show answer
+            // For simple queries, use Tavily answer if available
             if (tavilyAnswer) {
                 resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text"><p style="font-size:20px;font-weight:500;">${escapeHtml(tavilyAnswer)}</p></div></div>`;
             }
@@ -3041,15 +3040,37 @@ function displayAIResponse(ai, results, tavilyAnswer, tavilyTopic) {
         case 'BRAND':
         case 'FACTUAL':
         case 'COMPLEX':
-            // Only show summary for news/finance OR factual informational queries
-            if (showSummary && tavilyAnswer) {
+            // Use Tavily's advanced answer with image for all query types
+            if (tavilyAnswer) {
                 const formattedAnswer = formatTavilyAnswer(tavilyAnswer);
-                resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text">${formattedAnswer}</div></div>`;
+                
+                // Build AI summary with optional image
+                let summaryHTML = '<div class="ai-summary">';
+                summaryHTML += '<div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div>';
+                
+                if (firstImage) {
+                    // Desktop: Image on right, text on left
+                    // Mobile: Image on top, text below
+                    summaryHTML += `
+                        <div class="ai-summary-content">
+                            <div class="ai-summary-text-with-image">${formattedAnswer}</div>
+                            <div class="ai-summary-image">
+                                <img src="${escapeHtml(firstImage.url)}" alt="${escapeHtml(firstImage.description || '')}" loading="lazy">
+                                ${firstImage.description ? `<div class="image-caption">${escapeHtml(firstImage.description)}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    summaryHTML += `<div class="ai-summary-text">${formattedAnswer}</div>`;
+                }
+                
+                summaryHTML += '</div>';
+                resultsDiv.innerHTML = summaryHTML;
             }
             displayResults(rankedResults);
             break;
         default:
-            if (showSummary && tavilyAnswer) {
+            if (tavilyAnswer) {
                 const formattedDefault = formatTavilyAnswer(tavilyAnswer);
                 resultsDiv.innerHTML = `<div class="ai-summary"><div class="ai-summary-header"><span>⚡</span><span>AI Overview</span></div><div class="ai-summary-text">${formattedDefault}</div></div>`;
             }
