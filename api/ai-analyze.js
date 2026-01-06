@@ -44,18 +44,20 @@ Ranking Rules:
 - MUST include all 20 indices in ranking array`;
 
     try {
-        const response = await fetch('https://api.openai.com/v1/responses', {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${OPENAI_API_KEY}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'gpt-5-mini',
-                input: [
+                model: 'gpt-4o-mini',
+                messages: [
                     { role: 'system', content: systemPrompt },
                     { role: 'user', content: userPrompt }
-                ]
+                ],
+                temperature: 0,
+                response_format: { type: "json_object" }
             })
         });
 
@@ -65,7 +67,7 @@ Ranking Rules:
             return res.status(500).json({ error: data.error.message });
         }
 
-        const aiResponse = JSON.parse(data.output_text);
+        const aiResponse = JSON.parse(data.choices[0].message.content);
         res.json(aiResponse);
 
     } catch (error) {
