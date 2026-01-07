@@ -1772,9 +1772,9 @@ body {
 }
 
 .ai-summary-text p {
-    margin: 0 0 16px 0;
+    margin: 0 0 20px 0;
     font-size: 14px;
-    line-height: 1.58;
+    line-height: 1.65;
     color: #202124;
 }
 
@@ -3368,13 +3368,24 @@ function formatTavilyAnswer(text) {
     // Clean up extra spaces
     text = text.replace(/\s+/g, ' ').trim();
     
+    // Check if text has numbered list format
+    if (text.match(/\d+\.\s+[A-Z]/)) {
+        // Format as numbered list
+        const items = text.split(/(?=\d+\.\s+)/).filter(item => item.trim());
+        const listItems = items.map(item => {
+            const cleaned = item.trim();
+            return `<p style="margin: 8px 0;">${escapeHtml(cleaned)}</p>`;
+        });
+        return listItems.join('');
+    }
+    
     // Split into sentences
     const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
     
-    // Group into paragraphs (every 2-3 sentences)
+    // Group into paragraphs (every 3 sentences for better readability)
     const paragraphs = [];
-    for (let i = 0; i < sentences.length; i += 2) {
-        const para = sentences.slice(i, i + 2).join(' ').trim();
+    for (let i = 0; i < sentences.length; i += 3) {
+        const para = sentences.slice(i, i + 3).join(' ').trim();
         if (para) {
             paragraphs.push(`<p>${escapeHtml(para)}</p>`);
         }
