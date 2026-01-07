@@ -3140,7 +3140,20 @@ async function aiSearch(query) {
         return;
     }
     
-    resultsDiv.innerHTML = '<div class="loading">🔍 AI-powered search...</div>';
+    // Progressive loading messages
+    resultsDiv.innerHTML = '<div class="loading">🔍 Searching the web...</div>';
+    
+    setTimeout(() => {
+        if (resultsDiv.innerHTML.includes('Searching')) {
+            resultsDiv.innerHTML = '<div class="loading">📊 Analyzing sources...</div>';
+        }
+    }, 800);
+    
+    setTimeout(() => {
+        if (resultsDiv.innerHTML.includes('Analyzing')) {
+            resultsDiv.innerHTML = '<div class="loading">🤖 Ranking results...</div>';
+        }
+    }, 1600);
     
     try {
         const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=20`);
