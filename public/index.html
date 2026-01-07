@@ -3145,15 +3145,21 @@ async function aiSearch(query) {
     
     setTimeout(() => {
         if (resultsDiv.innerHTML.includes('Searching')) {
-            resultsDiv.innerHTML = '<div class="loading">📊 Analyzing sources...</div>';
+            resultsDiv.innerHTML = '<div class="loading">📊 Analyzing 20 sources...</div>';
         }
-    }, 800);
+    }, 600);
     
     setTimeout(() => {
         if (resultsDiv.innerHTML.includes('Analyzing')) {
-            resultsDiv.innerHTML = '<div class="loading">🤖 Ranking results...</div>';
+            resultsDiv.innerHTML = '<div class="loading">✨ Generating AI summary...</div>';
         }
-    }, 1600);
+    }, 1200);
+    
+    setTimeout(() => {
+        if (resultsDiv.innerHTML.includes('Generating')) {
+            resultsDiv.innerHTML = '<div class="loading">🤖 Ranking best results...</div>';
+        }
+    }, 1800);
     
     try {
         const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=20`);
