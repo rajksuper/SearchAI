@@ -13,12 +13,12 @@ def derive_name(url):
     name = domain.split(".")[0].replace("-", " ").title()
     return name
 
-def detect_topic(query):
-    """Detect if query is news/finance or general - combine finance and news for better results"""
-    query_lower = query.lower()
+#def detect_topic(query):
+    #Detect if query is news/finance or general - combine finance and news for better results
+    #query_lower = query.lower()
     
     # News + Finance keywords (combined for better diversity)
-    news_finance_keywords = ['news', 'latest', 'today', 'yesterday', 'breaking', 'current', 
+    """"news_finance_keywords = ['news', 'latest', 'today', 'yesterday', 'breaking', 'current', 
                              'recent', 'update', 'happened', 'president', 'election', 
                              'government', 'politics', 'war', 'crisis', 'attack',
                              'stock', 'price', 'market', 'trading', 'investment',
@@ -29,13 +29,15 @@ def detect_topic(query):
     if any(keyword in query_lower for keyword in news_finance_keywords):
         return 'news'
     
-    return 'general'
+    return 'general' """
 
 def tavily_search(query):
     """Call Tavily API directly using HTTP requests"""
     url = "https://api.tavily.com/search"
     
-    topic = detect_topic(query)
+   # topic = detect_topic(query) 
+
+    topic = 'general'
     
     payload = {
         "api_key": TAVILY_API_KEY,
