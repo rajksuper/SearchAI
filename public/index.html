@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Search AI - Fast. Clean. No spam.</title>
+<title>SearchZ.AI - Fast. Clean. No spam.</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
 <style>
 body {
@@ -21,7 +21,7 @@ body {
 
 .header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 30px 10px;
 }
 
 .show-images-btn {
@@ -95,16 +95,39 @@ body {
 }
 
 .logo {
-    font-size: 48px;
-    font-weight: 400;
+    font-size: 52px;
+    font-weight: 800;
     color: #202124;
     margin-bottom: 4px;
     letter-spacing: -1px;
+    filter: drop-shadow(0 0 12px rgba(0, 245, 255, 0.35));
+}
+
+/* Search */
+.logo .word {
+  background: linear-gradient(90deg, #00f5ff, #7cffc4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo .z {
+  background: linear-gradient(90deg, #9b5cff, #ff6ec7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* .ai */
+.logo .ai {
+  font-size: 30px;
+  margin-left: 2px;
+  color: #aaa;
+  font-weight: 500;
 }
 
 .tagline {
     font-size: 13px;
-    color: #70757a;
+   color: #aaa;
+   margin-top: 6px;
     margin-bottom: 28px;
 }
 
@@ -1887,9 +1910,14 @@ body {
 
 <div class="container">
     <div class="header">
-        <div class="logo" onclick="goHome()" style="cursor: pointer;">Search AI</div>
-        <div class="tagline">Fast. Clean. No spam.</div>
-    </div>
+  <div class="logo" onclick="goHome()">
+    <span class="word">Search</span>
+    <span class="z"> Z</span>
+    <span class="ai">.ai</span>
+  </div>
+  <div class="tagline">Fast. Clean. No spam.</div>
+</div>
+
     
     <div class="search-wrapper">
         <input id="searchSuggestion" class="search-suggestion" type="text" disabled />
